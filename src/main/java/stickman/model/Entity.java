@@ -8,7 +8,7 @@ public interface Entity {
     double getWidth();
     Layer getLayer();
 
-    enum Layer{
+    enum Layer {
         BACKGROUND, FOREGROUND, EFFECT
     }
 }
