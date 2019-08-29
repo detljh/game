@@ -53,7 +53,11 @@ public class GameWindow {
     }
 
     private void draw() {
-        model.tick();
+        try {
+            model.tick();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         List<Entity> entities = model.getCurrentLevel().getEntities();
 

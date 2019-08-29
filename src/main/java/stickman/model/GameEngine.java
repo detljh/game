@@ -11,5 +11,5 @@ public interface GameEngine {
     boolean moveRight();
     boolean stopMoving();
 
-    void tick();
+    void tick() throws InterruptedException;
 }

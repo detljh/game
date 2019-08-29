@@ -8,15 +8,17 @@ public class LevelImpl implements Level {
     private double height;
     private double width;
     private double floorHeight;
-    private double heroX;
     private Hero hero;
 
     public LevelImpl(double heroX, String heroSize, double floorHeight) {
-        this.heroX = heroX;
         entities = new ArrayList<Entity>();
         this.floorHeight = floorHeight;
         hero = new Hero("ch_stand1.png", heroX, floorHeight, heroSize);
         entities.add(hero);
+    }
+
+    public Hero getHero() {
+        return hero;
     }
 
     public void addEntity(Entity e) {
@@ -50,7 +52,7 @@ public class LevelImpl implements Level {
 
     @Override
     public double getHeroX() {
-        return heroX;
+        return hero.getXPos();
     }
 
     @Override

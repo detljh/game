@@ -11,7 +11,18 @@ public class Hero implements Entity {
         this.xPos = xPos;
         this.heroSize = heroSize;
         this.yPos = floorHeight - getHeight();
+    }
 
+    public void updateX(double newX) {
+        xPos = newX;
+    }
+
+    public void updateY(double newY) {
+        yPos = newY;
+    }
+
+    public void updateImagePath(String path) {
+        imagePath = path;
     }
 
     @Override
