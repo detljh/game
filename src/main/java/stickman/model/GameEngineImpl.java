@@ -15,6 +15,7 @@ public class GameEngineImpl implements GameEngine {
     private static final double speed = 5.0;
     private int walkFrame;
     private int standFrame;
+    private String state;
 
     public GameEngineImpl(String fileName) {
         try {
@@ -32,6 +33,7 @@ public class GameEngineImpl implements GameEngine {
         walkFrame = 0;
         standFrame = 0;
         currentLevel = new LevelImpl((double) stickmanPos.get("x"), stickmanSize, floorHeight);
+        state = "stop";
     }
 
     @Override
@@ -46,8 +48,9 @@ public class GameEngineImpl implements GameEngine {
 
     @Override
     public boolean jump() {
-        double newY = currentLevel.getHero().getYPos() - 10.0;
+        double newY = currentLevel.getHero().getYPos() - 5.0;
         currentLevel.getHero().updateY(newY);
+        state = "jump";
         return true;
     }
 
@@ -58,6 +61,7 @@ public class GameEngineImpl implements GameEngine {
         currentLevel.getHero().updateImagePath(path);
         double newX = currentLevel.getHeroX() - speed;
         currentLevel.getHero().updateX(newX);
+        state = "left";
         return true;
     }
 
@@ -68,6 +72,7 @@ public class GameEngineImpl implements GameEngine {
         currentLevel.getHero().updateImagePath(path);
         double newX = currentLevel.getHeroX() + speed;
         currentLevel.getHero().updateX(newX);
+        state = "right";
         return true;
     }
 
@@ -83,18 +88,23 @@ public class GameEngineImpl implements GameEngine {
             String path = "ch_stand" + standFrame + ".png";
             currentLevel.getHero().updateImagePath(path);
         }
-
+        state = "stop";
         return true;
     }
 
     @Override
     public void tick() {
-        double time_passed = 50;
-        double delta_time = 0;
-
-        while (time_passed >= delta_time) {
-            time_passed -= 0.00001;
+        if (state == "left") {
+            moveLeft();
+        } else if (state == "right") {
+            moveRight();
+        } else if (state == "jump") {
+            jump();
+        } else {
+            stopMoving();
         }
+
+
 
     }
 }
