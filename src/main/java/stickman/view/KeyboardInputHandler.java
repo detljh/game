@@ -12,7 +12,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-class KeyboardInputHandler{
+class KeyboardInputHandler {
     private final GameEngine model;
     private boolean left = false;
     private boolean right = false;
