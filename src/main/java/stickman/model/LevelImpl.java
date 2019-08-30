@@ -2,6 +2,7 @@ package stickman.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class LevelImpl implements Level {
     private List<Entity> entities;
@@ -9,20 +10,33 @@ public class LevelImpl implements Level {
     private double width;
     private double floorHeight;
     private Hero hero;
+    private int tick;
+    private double cloudVelocity;
+    private int cloudNumber;
 
     public LevelImpl(double heroX, String heroSize, double floorHeight) {
         entities = new ArrayList<Entity>();
         this.floorHeight = floorHeight;
         hero = new Hero("ch_stand1.png", heroX, floorHeight, heroSize);
         entities.add(hero);
+        cloudNumber = 0;
     }
 
     public Hero getHero() {
         return hero;
     }
 
-    public void addEntity(Entity e) {
-        entities.add(e);
+    public void addCloud(double velocity) {
+        cloudVelocity = velocity;
+        tick = (int)velocity * 40;
+        Random rand = new Random();
+        int cloudType = rand.nextInt(2) + 1;
+        double xPos = 640 - (rand.nextDouble() * 640);
+        double yPos = rand.nextDouble() * 150;
+        String path = "cloud_" + cloudType + ".png";
+        Cloud c = new Cloud(path, xPos, yPos, velocity);
+        entities.add(c);
+        cloudNumber++;
     }
 
     @Override
@@ -42,7 +56,14 @@ public class LevelImpl implements Level {
 
     @Override
     public void tick() {
+        tick--;
+        moveRight();
+        if (tick > 0) {
+            return;
+        }
+        tick = (int)cloudVelocity * 40;
 
+        addCloud(cloudVelocity);
     }
 
     @Override
@@ -67,11 +88,15 @@ public class LevelImpl implements Level {
 
     @Override
     public boolean moveRight() {
-        return false;
+        for (int i = 0; i < cloudNumber; i++) {
+            Cloud c = (Cloud)entities.get(i+1);
+            c.update(c.getXPos() + 0.32, c.getYPos());
+        }
+        return true;
     }
 
     @Override
     public boolean stopMoving() {
-        return false;
+        return true;
     }
 }

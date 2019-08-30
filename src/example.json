@@ -8,5 +8,4 @@
   "_stickmanPosComment": "Stickman should start at the x position indicated, with their y position being on your 'floor'. This must be a positive double.",
   "cloudVelocity": 3.2,
   "_cloudVelocityComment": "Clouds should move the given number of pixels per second. This must be a positive double.",
-  "floorHeight": 350.0
 }

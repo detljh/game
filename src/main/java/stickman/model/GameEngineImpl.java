@@ -16,7 +16,8 @@ public class GameEngineImpl implements GameEngine {
     private int walkFrame;
     private int standFrame;
     private String state;
-    private int tick = 60;
+    private int tick;
+    private static final double floorHeight = 350.0;
 
     public GameEngineImpl(String fileName) {
         try {
@@ -30,11 +31,11 @@ public class GameEngineImpl implements GameEngine {
         stickmanPos = (JSONObject) configuration.get("stickmanPos");
         cloudVelocity = (double) configuration.get("cloudVelocity");
         stickmanSize = (String) configuration.get("stickmanSize");
-        double floorHeight = (double) configuration.get("floorHeight");
         walkFrame = 0;
         standFrame = 0;
-        currentLevel = new LevelImpl((double) stickmanPos.get("x"), stickmanSize, floorHeight);
         state = "stop";
+        tick = 40;
+        startLevel();
 
     }
 
@@ -45,7 +46,11 @@ public class GameEngineImpl implements GameEngine {
 
     @Override
     public void startLevel() {
+        currentLevel = new LevelImpl((double) stickmanPos.get("x"), stickmanSize, floorHeight);
 
+        for (int i = 0; i < 5; i++) {
+            currentLevel.addCloud(cloudVelocity);
+        }
     }
 
     @Override
@@ -103,7 +108,7 @@ public class GameEngineImpl implements GameEngine {
     @Override
     public void tick() {
         tick--;
-
+        currentLevel.tick();
         if (state == "left") {
             if (tick > 33) {
                 return;
