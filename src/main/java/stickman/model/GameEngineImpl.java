@@ -16,6 +16,7 @@ public class GameEngineImpl implements GameEngine {
     private int walkFrame;
     private int standFrame;
     private String state;
+    private int tick = 60;
 
     public GameEngineImpl(String fileName) {
         try {
@@ -34,6 +35,7 @@ public class GameEngineImpl implements GameEngine {
         standFrame = 0;
         currentLevel = new LevelImpl((double) stickmanPos.get("x"), stickmanSize, floorHeight);
         state = "stop";
+
     }
 
     @Override
@@ -48,37 +50,43 @@ public class GameEngineImpl implements GameEngine {
 
     @Override
     public boolean jump() {
+        state = "jump";
+
         double newY = currentLevel.getHero().getYPos() - 5.0;
         currentLevel.getHero().updateY(newY);
-        state = "jump";
+
         return true;
     }
 
     @Override
     public boolean moveLeft() {
+        state = "left";
         walkFrame = walkFrame % 4 + 5;
         String path = "ch_walk" + walkFrame + ".png";
         currentLevel.getHero().updateImagePath(path);
         double newX = currentLevel.getHeroX() - speed;
         currentLevel.getHero().updateX(newX);
-        state = "left";
+
         return true;
     }
 
     @Override
     public boolean moveRight() {
+        state = "right";
         walkFrame = walkFrame % 4 + 1;
         String path = "ch_walk" + walkFrame + ".png";
         currentLevel.getHero().updateImagePath(path);
         double newX = currentLevel.getHeroX() + speed;
         currentLevel.getHero().updateX(newX);
-        state = "right";
+
         return true;
     }
 
     @Override
     public boolean stopMoving() {
         currentLevel.getHero().updateY(currentLevel.getFloorHeight() - currentLevel.getHero().getHeight());
+        state = "stop";
+
         if (walkFrame <= 4) {
             standFrame = standFrame % 3 + 1;
             String path = "ch_stand" + standFrame + ".png";
@@ -88,19 +96,41 @@ public class GameEngineImpl implements GameEngine {
             String path = "ch_stand" + standFrame + ".png";
             currentLevel.getHero().updateImagePath(path);
         }
-        state = "stop";
+
         return true;
     }
 
     @Override
     public void tick() {
+        tick--;
+
         if (state == "left") {
+            if (tick > 33) {
+                return;
+            }
+
+            tick = 40;
             moveLeft();
         } else if (state == "right") {
+            if (tick > 33) {
+                return;
+            }
+
+            tick = 40;
             moveRight();
         } else if (state == "jump") {
+            if (tick > 35) {
+                return;
+            }
+
+            tick = 40;
             jump();
         } else {
+            if (tick > 0) {
+                return;
+            }
+
+            tick = 40;
             stopMoving();
         }
 
