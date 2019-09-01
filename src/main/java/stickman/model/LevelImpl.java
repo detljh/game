@@ -13,30 +13,41 @@ public class LevelImpl implements Level {
     private int tick;
     private double cloudVelocity;
     private int cloudNumber;
+    private int fps;
 
-    public LevelImpl(double heroX, String heroSize, double floorHeight) {
+    public LevelImpl(double heroX, String heroSize, double cloudVelocity, double floorHeight, int fps, double width, double height) {
         entities = new ArrayList<Entity>();
         this.floorHeight = floorHeight;
         hero = new Hero("ch_stand1.png", heroX, floorHeight, heroSize);
         entities.add(hero);
         cloudNumber = 0;
+        this.cloudVelocity = Math.abs(cloudVelocity);
+        this.fps = fps;
+        this.width = width;
+        this.height = height;
+        // tick to spawn a new cloud once every time a cloud is a third across screen
+        tick = (int) (((this.width/3)/(cloudVelocity/fps)));
     }
 
     public Hero getHero() {
         return hero;
     }
 
-    public void addCloud(double velocity) {
-        cloudVelocity = velocity;
-        tick = (int)velocity * 40;
+    public Cloud addCloud(boolean initial) {
         Random rand = new Random();
         int cloudType = rand.nextInt(2) + 1;
-        double xPos = 640 - (rand.nextDouble() * 640);
-        double yPos = rand.nextDouble() * 150;
+        double xPos;
+        if (initial) {
+            xPos = (width*4) - (rand.nextDouble() * (width*4));
+        } else {
+            xPos = -(width/4) - (rand.nextDouble() * (width/4));
+        }
+        double yPos = rand.nextDouble() * (height/4.5);
         String path = "cloud_" + cloudType + ".png";
-        Cloud c = new Cloud(path, xPos, yPos, velocity);
+        Cloud c = new Cloud(path, xPos, yPos, cloudVelocity);
         entities.add(c);
         cloudNumber++;
+        return c;
     }
 
     @Override
@@ -56,14 +67,17 @@ public class LevelImpl implements Level {
 
     @Override
     public void tick() {
-        tick--;
         moveRight();
+        tick--;
         if (tick > 0) {
             return;
         }
-        tick = (int)cloudVelocity * 40;
+        tick = (int) ((int)fps * (this.width/cloudVelocity));
 
-        addCloud(cloudVelocity);
+        int spawn = new Random().nextInt(5) + 1;
+        for (int i = 0; i < spawn; i++) {
+            addCloud(false);
+        }
     }
 
     @Override
@@ -90,7 +104,7 @@ public class LevelImpl implements Level {
     public boolean moveRight() {
         for (int i = 0; i < cloudNumber; i++) {
             Cloud c = (Cloud)entities.get(i+1);
-            c.update(c.getXPos() + 0.32, c.getYPos());
+            c.updateX(c.getXPos() + (cloudVelocity/fps));
         }
         return true;
     }

@@ -2,8 +2,9 @@ package stickman.model;
 
 public class Hero implements Entity {
     private String imagePath;
-    public double xPos;
-    public double yPos;
+    private double xPos;
+    private double yPos;
+
     private String heroSize;
 
     public Hero(String imagePath, double xPos, double floorHeight, String heroSize) {
@@ -14,6 +15,9 @@ public class Hero implements Entity {
     }
 
     public void updateX(double newX) {
+        if (newX < 0) {
+            newX = 0;
+        }
         xPos = newX;
     }
 

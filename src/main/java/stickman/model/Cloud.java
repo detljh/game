@@ -13,9 +13,12 @@ public class Cloud implements Entity {
         this.velocity = velocity;
     }
 
-    public void update(double newX, double newY) {
-        this.xPos = newX;
-        this.yPos = newY;
+    public void updateX(double newX) {
+        xPos = newX;
+    }
+
+    public void updateY(double newY) {
+        yPos = newY;
     }
 
     @Override
