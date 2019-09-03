@@ -7,7 +7,6 @@ import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 import stickman.model.Entity;
 import stickman.model.GameEngine;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +56,7 @@ public class GameWindow {
             model.tick();
         } catch (InterruptedException e) {
             e.printStackTrace();
+            return;
         }
 
         List<Entity> entities = model.getCurrentLevel().getEntities();
@@ -69,6 +69,7 @@ public class GameWindow {
         heroXPos -= xViewportOffset;
 
         if (heroXPos < VIEWPORT_MARGIN) {
+
             if (xViewportOffset >= 0) { // Don't go further left than the start of the level
                 xViewportOffset -= VIEWPORT_MARGIN - heroXPos;
                 if (xViewportOffset < 0) {

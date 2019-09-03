@@ -5,7 +5,6 @@ import javafx.stage.Stage;
 import stickman.model.GameEngine;
 import stickman.model.GameEngineImpl;
 import stickman.view.GameWindow;
-
 import java.util.Map;
 
 public class App extends Application {
@@ -24,7 +23,7 @@ public class App extends Application {
                     " as your code will fail to compile on Java 10 and below.");
         }
 
-        GameEngine model = new GameEngineImpl("src/main/resources/example.json");
+        GameEngine model = new GameEngineImpl("example.json");
         GameWindow window = new GameWindow(model, 640, 400);
         window.run();
 

@@ -15,9 +15,9 @@ public class LevelImpl implements Level {
     private int cloudNumber;
     private int fps;
 
-    public LevelImpl(double heroX, String heroSize, double cloudVelocity, double floorHeight, int fps, double width, double height) {
+    public LevelImpl(double heroX, String heroSize, double cloudVelocity, int fps, double width, double height) {
         entities = new ArrayList<Entity>();
-        this.floorHeight = floorHeight;
+        this.floorHeight = height - height / 7;
         hero = new Hero("ch_stand1.png", heroX, floorHeight, heroSize);
         entities.add(hero);
         cloudNumber = 0;
@@ -26,7 +26,7 @@ public class LevelImpl implements Level {
         this.width = width;
         this.height = height;
         // tick to spawn a new cloud once every time a cloud is a third across screen
-        tick = (int) (((this.width/3)/(cloudVelocity/fps)));
+        tick = (int) (((this.width / 3) / (cloudVelocity / fps)));
     }
 
     public Hero getHero() {
@@ -38,11 +38,11 @@ public class LevelImpl implements Level {
         int cloudType = rand.nextInt(2) + 1;
         double xPos;
         if (initial) {
-            xPos = (width*4) - (rand.nextDouble() * (width*4));
+            xPos = (width * 4) - (rand.nextDouble() * (width * 4));
         } else {
-            xPos = -(width/4) - (rand.nextDouble() * (width/4));
+            xPos = -(width / 4) - (rand.nextDouble() * (width / 4));
         }
-        double yPos = rand.nextDouble() * (height/4.5);
+        double yPos = rand.nextDouble() * (height / 4.5);
         String path = "cloud_" + cloudType + ".png";
         Cloud c = new Cloud(path, xPos, yPos, cloudVelocity);
         entities.add(c);
@@ -103,7 +103,7 @@ public class LevelImpl implements Level {
     @Override
     public boolean moveRight() {
         for (int i = 0; i < cloudNumber; i++) {
-            Cloud c = (Cloud)entities.get(i+1);
+            Cloud c = (Cloud)entities.get(i + 1);
             c.updateX(c.getXPos() + (cloudVelocity/fps));
         }
         return true;

@@ -5,7 +5,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import stickman.model.GameEngine;
-
 import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
