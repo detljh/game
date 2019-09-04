@@ -5,8 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 public class LevelImpl implements Level {
-    // define gravity for the level
-    private static final double GRAVITY = 9.8;
+    private double gravity = 9.8 / GameEngineImpl.FPS;
     private List<Entity> entities;
     private double height;
     private double width;
@@ -19,9 +18,9 @@ public class LevelImpl implements Level {
 
     LevelImpl(double heroX, String heroSize, double cloudVelocity, double width, double height) {
         entities = new ArrayList<>();
-        this.floorHeight = height - height / 7;
-        hero = new Hero("ch_stand1.png", heroX, 200.0 / GameEngineImpl.FPS,
-                200.0 / GameEngineImpl.FPS, floorHeight, heroSize, 80.0);
+        floorHeight = height - height / 7;
+        hero = new Hero("ch_stand1.png", heroX,200.0 / GameEngineImpl.FPS,
+                200.0 / GameEngineImpl.FPS, heroSize, 80.0, floorHeight);
         entities.add(hero);
 
         // ignore negative cloud velocity
@@ -39,14 +38,14 @@ public class LevelImpl implements Level {
     }
 
     double getGravity() {
-        return GRAVITY / GameEngineImpl.FPS;
+        return gravity;
     }
 
     Hero getHero() {
         return hero;
     }
 
-    Cloud addCloud(boolean initial) {
+    void addCloud(boolean initial) {
         Random rand = new Random();
         // randomize cloud image used
         int cloudType = rand.nextInt(2) + 1;
@@ -66,7 +65,6 @@ public class LevelImpl implements Level {
         Cloud c = new Cloud(path, xPos, yPos, cloudVelocity);
         entities.add(c);
         cloudNumber++;
-        return c;
     }
 
     @Override

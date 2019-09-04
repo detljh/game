@@ -9,8 +9,8 @@ public class Hero implements Entity {
     private double yVelocity;
     private double jumpHeight;
 
-    Hero(String imagePath, double xPos, double xVelocity, double yVelocity, double floorHeight, String heroSize,
-         double jumpHeight) {
+    Hero(String imagePath, double xPos, double xVelocity, double yVelocity, String heroSize, double jumpHeight,
+         double floorHeight) {
         this.imagePath = imagePath;
         this.xPos = xPos;
         this.heroSize = heroSize;
@@ -32,12 +32,12 @@ public class Hero implements Entity {
         this.yVelocity = 200.0 / GameEngineImpl.FPS;
     }
 
-    void updateVelocityY(double y) {
-        this.yVelocity = y;
-    }
-
     void updateVelocityX(double x) {
         this.xVelocity = x;
+    }
+
+    void updateVelocityY(double y) {
+        this.yVelocity = y;
     }
 
     double getVelocityX() {

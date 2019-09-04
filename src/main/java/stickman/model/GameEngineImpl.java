@@ -12,8 +12,8 @@ public class GameEngineImpl implements GameEngine {
     private JSONObject configuration;
     // initial x position of stickman
     private JSONObject stickmanPos;
-    private double cloudVelocity;
     private String stickmanSize;
+    private double cloudVelocity;
     private LevelImpl currentLevel;
     // keep track of imagepath frame for animation
     private int walkFrame = 0;
