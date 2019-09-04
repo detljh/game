@@ -6,19 +6,19 @@ public class Cloud implements Entity {
     private double xPos;
     private double yPos;
 
-    public Cloud(String imagePath, double xPos, double yPos, double velocity) {
+    Cloud(String imagePath, double xPos, double yPos, double velocity) {
         this.imagePath = imagePath;
         this.xPos = xPos;
         this.yPos = yPos;
         this.velocity = velocity;
     }
 
-    public void updateX(double newX) {
-        xPos = newX;
+    double getVelocity() {
+        return velocity;
     }
 
-    public void updateY(double newY) {
-        yPos = newY;
+    void updateX(double newX) {
+        xPos = newX;
     }
 
     @Override

@@ -4,28 +4,63 @@ public class Hero implements Entity {
     private String imagePath;
     private double xPos;
     private double yPos;
-
     private String heroSize;
+    private double xVelocity;
+    private double yVelocity;
+    private double jumpHeight;
 
-    public Hero(String imagePath, double xPos, double floorHeight, String heroSize) {
+    Hero(String imagePath, double xPos, double xVelocity, double yVelocity, double floorHeight, String heroSize,
+         double jumpHeight) {
         this.imagePath = imagePath;
         this.xPos = xPos;
         this.heroSize = heroSize;
         this.yPos = floorHeight - getHeight();
+        this.xVelocity = xVelocity;
+        this.yVelocity = yVelocity;
+        this.jumpHeight = jumpHeight;
     }
 
-    public void updateX(double newX) {
-        if (newX < 0) {
-            newX = 0;
+    double getJumpHeight() {
+        return jumpHeight;
+    }
+
+    void resetVelocityX() {
+        this.xVelocity = 200.0 / GameEngineImpl.FPS;
+    }
+
+    void resetVelocityY() {
+        this.yVelocity = 200.0 / GameEngineImpl.FPS;
+    }
+
+    void updateVelocityY(double y) {
+        this.yVelocity = y;
+    }
+
+    void updateVelocityX(double x) {
+        this.xVelocity = x;
+    }
+
+    double getVelocityX() {
+        return xVelocity;
+    }
+
+    double getVelocityY() {
+        return yVelocity;
+    }
+
+    void updateX(double x) {
+        // prevent hero from moving off left of screen
+        if (x < 0) {
+            x = 0;
         }
-        xPos = newX;
+        xPos = x;
     }
 
-    public void updateY(double newY) {
-        yPos = newY;
+    void updateY(double y) {
+        yPos = y;
     }
 
-    public void updateImagePath(String path) {
+    void updateImagePath(String path) {
         imagePath = path;
     }
 

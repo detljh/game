@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Random;
 
 public class LevelImpl implements Level {
+    // define gravity for the level
+    private static final double GRAVITY = 9.8;
     private List<Entity> entities;
     private double height;
     private double width;
@@ -13,35 +15,52 @@ public class LevelImpl implements Level {
     private int tick;
     private double cloudVelocity;
     private int cloudNumber;
-    private int fps;
 
-    public LevelImpl(double heroX, String heroSize, double cloudVelocity, int fps, double width, double height) {
-        entities = new ArrayList<Entity>();
+
+    LevelImpl(double heroX, String heroSize, double cloudVelocity, double width, double height) {
+        entities = new ArrayList<>();
         this.floorHeight = height - height / 7;
-        hero = new Hero("ch_stand1.png", heroX, floorHeight, heroSize);
+        hero = new Hero("ch_stand1.png", heroX, 200.0 / GameEngineImpl.FPS,
+                200.0 / GameEngineImpl.FPS, floorHeight, heroSize, 80.0);
         entities.add(hero);
-        cloudNumber = 0;
+
+        // ignore negative cloud velocity
         this.cloudVelocity = Math.abs(cloudVelocity);
-        this.fps = fps;
         this.width = width;
         this.height = height;
+
         // tick to spawn a new cloud once every time a cloud is a third across screen
-        tick = (int) (((this.width / 3) / (cloudVelocity / fps)));
+        tick = (int) (((this.width / 3) / (cloudVelocity / GameEngineImpl.FPS)));
+
+        // spawn initial number of clouds
+        for (int i = 0; i < (int) width / 30; i++) {
+            addCloud(true);
+        }
     }
 
-    public Hero getHero() {
+    double getGravity() {
+        return GRAVITY / GameEngineImpl.FPS;
+    }
+
+    Hero getHero() {
         return hero;
     }
 
-    public Cloud addCloud(boolean initial) {
+    Cloud addCloud(boolean initial) {
         Random rand = new Random();
+        // randomize cloud image used
         int cloudType = rand.nextInt(2) + 1;
+
         double xPos;
+        /* if clouds are initial clouds, spawn them on screen, else spawn them off screen so they move in screen from
+         * left of screen */
         if (initial) {
             xPos = (width * 4) - (rand.nextDouble() * (width * 4));
         } else {
             xPos = -(width / 4) - (rand.nextDouble() * (width / 4));
         }
+
+        // randomise y position of cloud
         double yPos = rand.nextDouble() * (height / 4.5);
         String path = "cloud_" + cloudType + ".png";
         Cloud c = new Cloud(path, xPos, yPos, cloudVelocity);
@@ -72,8 +91,9 @@ public class LevelImpl implements Level {
         if (tick > 0) {
             return;
         }
-        tick = (int) ((int)fps * (this.width/cloudVelocity));
+        tick = (int) (GameEngineImpl.FPS * (this.width / cloudVelocity));
 
+        // spawn 1-5 clouds if tick is 0
         int spawn = new Random().nextInt(5) + 1;
         for (int i = 0; i < spawn; i++) {
             addCloud(false);
@@ -103,8 +123,8 @@ public class LevelImpl implements Level {
     @Override
     public boolean moveRight() {
         for (int i = 0; i < cloudNumber; i++) {
-            Cloud c = (Cloud)entities.get(i + 1);
-            c.updateX(c.getXPos() + (cloudVelocity/fps));
+            Cloud c = (Cloud) entities.get(i + 1);
+            c.updateX(c.getXPos() + (c.getVelocity() / GameEngineImpl.FPS));
         }
         return true;
     }

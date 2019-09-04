@@ -3,38 +3,31 @@ package stickman.model;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.File;
+import java.io.FileReader;
+import java.net.URI;
 
 public class GameEngineImpl implements GameEngine {
-    private static final int fps = (int) ((int) 1000 / 0.017) / 1000;
-    // speed of hero movement
-    private static final double velocityX = 200.0 / fps;
-    private static final double gravity = 9.8 / fps;
-    // highest point of jump
-    private static final double jumpHeight = 80.0;
-    // speed of jump
-    private static double velocityY = 200.0 / fps;
+    static final int FPS = (int) (1000 / 0.017) / 1000;
     private JSONObject configuration;
+    // initial x position of stickman
     private JSONObject stickmanPos;
     private double cloudVelocity;
     private String stickmanSize;
     private LevelImpl currentLevel;
-    // keep track of imagepath for animation
+    // keep track of imagepath frame for animation
     private int walkFrame = 0;
     private int standFrame = 0;
-
-    // store state of hero movement
+    // store state of hero movement, initially not moving
     private String state = "stop";
-
     // slow down tick to every 3/4 of a second
-    private int tick = (int) (fps * 0.75);
+    private int tick = (int) (FPS * 0.75);
 
     public GameEngineImpl(String fileName) {
         try {
-            String content = new String(Files.readAllBytes(Paths.get("src/main/resources/" + fileName)));
+            URI uri = new URI(this.getClass().getResource("/" + fileName).toString());
             JSONParser jp = new JSONParser();
-            configuration = (JSONObject) jp.parse(content);
+            configuration = (JSONObject) jp.parse(new FileReader(new File(uri.getPath())));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -53,82 +46,90 @@ public class GameEngineImpl implements GameEngine {
 
     @Override
     public void startLevel() {
+        // level dimensions
         double width = 640.0;
         double height = 400.0;
-        currentLevel = new LevelImpl((double) stickmanPos.get("x"), stickmanSize, cloudVelocity, fps, width, height);
-
-        // create initial clouds
-        int cloudNumber = (int) width / 20;
-        for (int i = 0; i < cloudNumber; i++) {
-            currentLevel.addCloud(true);
-        }
+        currentLevel = new LevelImpl((double) stickmanPos.get("x"), stickmanSize, cloudVelocity, width, height);
     }
 
     @Override
     public boolean jump() {
-        double heroY = currentLevel.getHero().getYPos();
-        double heroHeight = currentLevel.getHero().getHeight();
+        Hero hero = currentLevel.getHero();
+        // get current hero y position
+        double heroY = hero.getYPos();
+        double heroHeight = hero.getHeight();
         double floorHeight = currentLevel.getFloorHeight() - heroHeight;
+        double jumpHeight = hero.getJumpHeight();
+        double gravity = currentLevel.getGravity();
 
         // if hero is on the floor
         if (heroY >= floorHeight) {
-            // hero lands on floor
+            // if hero is landing on floor
             if (state.contains("fall")) {
+                // if hero was moving left, continue moving left
                 if (state.equals("leftfall")) {
                     state = "left";
+                // if hero was moving right, continue right
                 } else if (state.equals("rightfall")) {
                     state = "right";
                 } else {
                     state = "stop";
                 }
 
-                velocityY = 200.0 / fps;
-                currentLevel.getHero().updateY(floorHeight);
+                // end of jump, reset vertical and horizontal velocity
+                hero.resetVelocityY();
+                hero.resetVelocityX();
+                // set hero's y position to be on the floor
+                hero.updateY(floorHeight);
                 return false;
             }
 
             // change x position according to previous move
             if (state.equals("left") || state.equals("leftjump")) {
-                currentLevel.getHero().updateX(currentLevel.getHeroX() - (velocityX / 3));
+                hero.updateX(currentLevel.getHeroX() - hero.getVelocityX());
                 state = "leftjump";
             } else if (state.equals("right") || state.equals("rightjump")) {
-                currentLevel.getHero().updateX(currentLevel.getHeroX() + (velocityX / 3));
+                hero.updateX(currentLevel.getHeroX() + hero.getVelocityX());
                 state = "rightjump";
             } else {
                 state = "jump";
             }
 
-            // initial jump, make velocity negative so that hero jumps
-            velocityY *= -1;
-            // add gravity to a negative velocity to decrease the amount of y displacement on hero
-            velocityY += gravity;
-            heroY += velocityY;
-            currentLevel.getHero().updateY(heroY);
+            // initial jump, slow down x velocity
+            hero.updateVelocityX(hero.getVelocityX() / 3);
+            // make velocity negative so that hero jumps, add gravity to a negative velocity to decrease the amount of
+            // y displacement
+            hero.updateVelocityY((hero.getVelocityY() * -1) + gravity);
+            heroY += hero.getVelocityY();
+            hero.updateY(heroY);
             return true;
         } else {
-            if ((velocityY > 0) && (heroY < (floorHeight - jumpHeight))) {
-                velocityY *= -1;
+            // if hero is jumping and hits the max jump height, make velocity positive again so hero falls
+            if ((hero.getVelocityY() > 0) && (heroY < (floorHeight - jumpHeight))) {
+                hero.updateVelocityY((hero.getVelocityY() * -1));
             }
 
             if (state.equals("leftjump") || state.equals("leftfall")) {
-                currentLevel.getHero().updateX(currentLevel.getHeroX() - (velocityX / 3));
+                currentLevel.getHero().updateX(currentLevel.getHeroX() - hero.getVelocityX());
                 state = "leftfall";
             } else if (state.equals("rightjump") || state.equals("rightfall")) {
-                currentLevel.getHero().updateX(currentLevel.getHeroX() + (velocityX / 3));
+                currentLevel.getHero().updateX(currentLevel.getHeroX() + hero.getVelocityX());
                 state = "rightfall";
             } else {
                 state = "fall";
             }
 
-            velocityY += gravity;
-            heroY += velocityY;
-            currentLevel.getHero().updateY(heroY);
+            // increase positive velocity by gravity so hero falls quicker
+            hero.updateVelocityY(hero.getVelocityY() + gravity);
+            heroY += hero.getVelocityY();
+            hero.updateY(heroY);
             return false;
         }
     }
 
     @Override
     public boolean moveLeft() {
+        // if hero is not on the floor, hero is moving left in the air
         if (currentLevel.getHero().getYPos() < currentLevel.getFloorHeight() - currentLevel.getHero().getHeight()) {
             if (state.contains("fall")) {
                 state = "leftfall";
@@ -139,24 +140,25 @@ public class GameEngineImpl implements GameEngine {
         }
         state = "left";
 
-        if (tick > (fps * 0.60)) {
+        // slow down animation
+        if (tick > (FPS * 0.60)) {
             return true;
         }
-        tick = (int) (fps * 0.75);
+        tick = (int) (FPS * 0.75);
 
         // loop around walk frames facing left
         walkFrame = walkFrame % 4 + 5;
         String path = "ch_walk" + walkFrame + ".png";
         currentLevel.getHero().updateImagePath(path);
 
-        double newX = currentLevel.getHeroX() - velocityX;
+        double newX = currentLevel.getHeroX() - currentLevel.getHero().getVelocityX();
         currentLevel.getHero().updateX(newX);
-
         return true;
     }
 
     @Override
     public boolean moveRight() {
+        // if hero is not on floor, hero is moving right in the air
         if (currentLevel.getHero().getYPos() < currentLevel.getFloorHeight() - currentLevel.getHero().getHeight()) {
             if (state.contains("fall")) {
                 state = "rightfall";
@@ -167,25 +169,25 @@ public class GameEngineImpl implements GameEngine {
         }
         state = "right";
 
-        if (tick > (fps * 0.65)) {
+        // slow down animation
+        if (tick > (FPS * 0.65)) {
             return true;
         }
-        tick = (int) (fps * 0.75);
+        tick = (int) (FPS * 0.75);
 
         // loop around walk frames going right
         walkFrame = walkFrame % 4 + 1;
         String path = "ch_walk" + walkFrame + ".png";
         currentLevel.getHero().updateImagePath(path);
 
-        double newX = currentLevel.getHeroX() + velocityX;
+        double newX = currentLevel.getHeroX() + currentLevel.getHero().getVelocityX();
         currentLevel.getHero().updateX(newX);
-
         return true;
     }
 
     @Override
     public boolean stopMoving() {
-        // make sure hero is on the floor
+        // if hero is not on floor, then either falling or jumping in place
         if (currentLevel.getHero().getYPos() < currentLevel.getFloorHeight() - currentLevel.getHero().getHeight()) {
             if (state.contains("fall")) {
                 state = "fall";
@@ -197,12 +199,13 @@ public class GameEngineImpl implements GameEngine {
 
         state = "stop";
 
+        // slow down animation
         if (tick > 0) {
             return true;
         }
-        tick = (int) (fps * 0.75);
+        tick = (int) (FPS * 0.75);
 
-        // update stand frame based on direction
+        // update stand frame based on direction hero was previously walking in
         if (walkFrame <= 4) {
             standFrame = standFrame % 3 + 1;
             String path = "ch_stand" + standFrame + ".png";
@@ -212,16 +215,15 @@ public class GameEngineImpl implements GameEngine {
             String path = "ch_stand" + standFrame + ".png";
             currentLevel.getHero().updateImagePath(path);
         }
-
         return true;
     }
 
     @Override
     public void tick() {
+        // tick is decreased to slow down animations
         tick--;
         // call level's tick method to move clouds
         currentLevel.tick();
-        // tick is decreased until a movement is allowed so that animations are slowed down
         if (state.equals("left")) {
             moveLeft();
         } else if (state.equals("right")) {
