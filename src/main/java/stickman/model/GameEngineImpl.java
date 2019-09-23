@@ -1,21 +1,24 @@
 package stickman.model;
 
 import javafx.geometry.Point2D;
+import org.graalvm.compiler.lir.sparc.SPARCMove;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import stickman.controller.Controller;
 import stickman.controller.HeroController;
 
 import java.io.File;
 import java.io.FileReader;
 import java.net.URI;
+import java.text.DecimalFormat;
 
 public class GameEngineImpl implements GameEngine {
     public static final int FPS = (int) (1000 / 0.017) / 1000;
     private JSONObject configuration;
     private LevelImpl currentLevel;
     private static int lives = 3;
+    private String finish = "";
+    private int tick = 0;
 
     public GameEngineImpl(String fileName) {
         try {
@@ -45,7 +48,18 @@ public class GameEngineImpl implements GameEngine {
         .addHero((JSONObject) configuration.get("stickman"))
         .addEnemy((JSONArray) configuration.get("enemyType"))
         .spawnClouds((Double) configuration.get("cloudVelocity"))
+        .addFinish((JSONObject) configuration.get("finish"))
         .build();
+    }
+
+    @Override
+    public String finish() {
+        return finish;
+    }
+
+    @Override
+    public int getLives() {
+        return lives;
     }
 
     @Override
@@ -69,6 +83,11 @@ public class GameEngineImpl implements GameEngine {
 
     @Override
     public void handleCollision(Entity a, Entity other) {
+        if (other.equals(currentLevel.getFinish())) {
+            finish = "won";
+            return;
+        }
+
         Point2D aPos = new Point2D(a.getDesiredX(), a.getDesiredY());
         Point2D otherPos = new Point2D(other.getXPos(), other.getYPos());
 
@@ -80,16 +99,14 @@ public class GameEngineImpl implements GameEngine {
         } else {
             width = a.getWidth();
         }
-        System.out.println(collisionVector);
+
         if (Math.abs(collisionVector.getX()) > Math.abs(collisionVector.getY())) {
             if (collisionVector.getX() < 0) {
                 a.setDesiredX(other.getXPos() + other.getWidth());
                 a.setXVel(0);
-                System.out.println("left");
             } else {
                 a.setDesiredX(other.getXPos() - width);
                 a.setXVel(0);
-                System.out.println("right");
             }
         } else {
             if (collisionVector.getY() > 0) {
@@ -99,7 +116,6 @@ public class GameEngineImpl implements GameEngine {
                     HeroController aC = (HeroController) a.getController();
                     aC.setOnFloor(true);
                     aC.setJump(false);
-                    System.out.println("down");
                 }
 
             } else {
@@ -109,7 +125,6 @@ public class GameEngineImpl implements GameEngine {
                     HeroController aC = (HeroController) a.getController();
                     aC.setJump(false);
                 }
-                System.out.println("up");
             }
         }
     }
@@ -124,7 +139,14 @@ public class GameEngineImpl implements GameEngine {
     }
 
     @Override
+    public String getTime() {
+        DecimalFormat time = new DecimalFormat("#.00");
+        return time.format(tick * 0.017);
+    }
+
+    @Override
     public void tick() {
+        tick++;
         update();
         // call level's tick method to move clouds
         currentLevel.tick();
@@ -138,6 +160,12 @@ public class GameEngineImpl implements GameEngine {
         for (Entity a : currentLevel.getEntities()) {
             for (Entity other : currentLevel.getEntities()) {
                 if (checkCollision(a, other)) {
+                    if (currentLevel.isEnemy(other)) {
+                        lives--;
+                        if (lives == 0) {
+                            finish = "lost";
+                        }
+                    }
                     handleCollision(a, other);
                     break;
                 }

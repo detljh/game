@@ -2,9 +2,17 @@ package stickman.view;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import stickman.controller.HeroController;
 import stickman.model.Entity;
@@ -19,6 +27,9 @@ public class GameWindow {
     private GameEngine model;
     private List<EntityView> entityViews;
     private BackgroundDrawer backgroundDrawer;
+    private Text time;
+    private Text lives;
+    private Timeline timeline;
 
     private double xViewportOffset = 0.0;
     private static double VIEWPORT_MARGIN;
@@ -29,6 +40,20 @@ public class GameWindow {
         this.width = width;
         this.scene = new Scene(pane, width, height);
         this.VIEWPORT_MARGIN = width * 2/5;
+
+        time = new Text();
+        time.setFill(Color.BLACK);
+        time.setX(0.0);
+        time.setY(10.0);
+        time.setViewOrder(0.0);
+        pane.getChildren().add(time);
+
+        lives = new Text();
+        lives.setFill(Color.BLACK);
+        lives.setX(width - 50.0);
+        lives.setY(10.0);
+        lives.setViewOrder(0.0);
+        pane.getChildren().add(lives);
 
         this.entityViews = new ArrayList<>();
 
@@ -47,11 +72,19 @@ public class GameWindow {
     }
 
     public void run() {
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(17),
+        timeline = new Timeline(new KeyFrame(Duration.millis(17),
                 t -> this.draw()));
 
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
+    }
+
+    private void setTimer() {
+        time.setText("Elapsed time: " + model.getTime());
+    }
+
+    private void setLives() {
+        lives.setText("Lives: " + model.getLives());
     }
 
     private void draw() {
@@ -60,6 +93,33 @@ public class GameWindow {
         } catch (InterruptedException e) {
             e.printStackTrace();
             return;
+        }
+
+        if (model.finish().equals("won")) {
+            for (Node n : pane.getChildren()) {
+                n.setOpacity(0.5);
+            }
+            Text gameOverText = new Text("Congratulations!\n You have won!");
+            gameOverText.setFill(Color.BLACK);
+            gameOverText.setFont(Font.font(20));
+            gameOverText.setViewOrder(0.0);
+            gameOverText.setX(width / 3);
+            gameOverText.setY(scene.getHeight() / 2);
+            pane.getChildren().add(gameOverText);
+            timeline.stop();
+        } else if (model.finish().equals("lost")) {
+            for (Node n : pane.getChildren()) {
+                n.setOpacity(0.5);
+            }
+            Text gameOverText = new Text("Game Over!");
+            gameOverText.setFill(Color.BLACK);
+            gameOverText.setFont(Font.font(20));
+            gameOverText.setViewOrder(0.0);
+            pane.getChildren().add(gameOverText);
+            timeline.stop();
+        } else {
+            setTimer();
+            setLives();
         }
 
         List<Entity> entities = model.getCurrentLevel().getEntities();

@@ -10,4 +10,7 @@ public interface GameEngine {
     boolean checkCollision(Entity a, Entity other);
     void handleCollision(Entity a, Entity other);
     void update();
+    String finish();
+    String getTime();
+    int getLives();
 }

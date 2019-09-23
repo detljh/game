@@ -1,6 +1,5 @@
 package stickman.model;
 
-import javafx.geometry.Point2D;
 import stickman.controller.Controller;
 import stickman.controller.HeroController;
 

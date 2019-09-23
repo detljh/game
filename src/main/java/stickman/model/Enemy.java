@@ -92,4 +92,5 @@ public class Enemy implements Entity {
     public Controller getController() {
         return null;
     }
+
 }

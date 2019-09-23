@@ -12,6 +12,8 @@ import java.util.Random;
 public class LevelImpl implements Level {
     private double gravity;
     private List<Entity> entities;
+    private List<Cloud> clouds;
+    private List<Enemy> enemies;
     private double height;
     private double width;
     public double floorHeight;
@@ -21,6 +23,7 @@ public class LevelImpl implements Level {
     private double cloudVelocity;
     private int enemyCount;
     private int platformCount;
+    private Finish finish;
 
 
     LevelImpl(LevelBuilder builder) {
@@ -35,6 +38,9 @@ public class LevelImpl implements Level {
         this.cloudVelocity = builder.cloudVelocity;
         this.enemyCount = builder.enemyCount;
         this.platformCount = builder.platformCount;
+        this.finish = builder.finish;
+        this.clouds = builder.clouds;
+        this.enemies = builder.enemies;
         tick = (int) ((width * 4 / 5) / (cloudVelocity / GameEngineImpl.FPS));
     }
 
@@ -55,7 +61,21 @@ public class LevelImpl implements Level {
         c.setController(cc);
         cc.setLevel(this);
         entities.add(c);
+        clouds.add(c);
         cloudCount++;
+    }
+
+    public Finish getFinish() {
+        return finish;
+    }
+
+    public boolean isEnemy(Entity other) {
+        for (int i = 0; i < enemies.size(); i++) {
+            if (other.equals(enemies.get(i))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public int getCloudCount() {
@@ -88,8 +108,8 @@ public class LevelImpl implements Level {
 
     @Override
     public void tick() {
-        for (int i = 0; i < cloudCount; i++) {
-            entities.get(i + enemyCount + platformCount + 1).getController().tick();
+        for (int i = 0; i < clouds.size(); i++) {
+            clouds.get(i).getController().tick();
         }
 
         // spawn 1-3 clouds if tick is 0 and velocity is positive
@@ -121,6 +141,8 @@ public class LevelImpl implements Level {
     static class LevelBuilder {
         private double gravity;
         private List<Entity> entities;
+        private List<Cloud> clouds;
+        private List<Enemy> enemies;
         private double height;
         private double width;
         private double floorHeight;
@@ -129,12 +151,15 @@ public class LevelImpl implements Level {
         private double cloudVelocity;
         private int enemyCount;
         private int platformCount;
+        private Finish finish;
 
         LevelBuilder() {
             cloudCount = 0;
             enemyCount = 0;
             platformCount = 0;
             entities = new ArrayList<>();
+            clouds = new ArrayList<>();
+            enemies = new ArrayList<>();
             gravity = 9.8 / GameEngineImpl.FPS;
         }
 
@@ -165,6 +190,7 @@ public class LevelImpl implements Level {
         }
 
         LevelBuilder addEnemy(JSONArray enemies) {
+
             return this;
         }
 
@@ -193,6 +219,7 @@ public class LevelImpl implements Level {
             CloudController cc = new CloudController(c);
             c.setController(cc);
             entities.add(c);
+            clouds.add(c);
             cloudCount++;
         }
 
@@ -202,10 +229,21 @@ public class LevelImpl implements Level {
             String path = "foot_tile.png";
 
             for (int i = 0; i < x.size(); i++) {
-                Platform p = new Platform((double) x.get(i), (double) y.get(i), path);
+                Platform p = new Platform((double) x.get(i), floorHeight - (double) y.get(i), path);
                 entities.add(p);
                 platformCount++;
             }
+            return this;
+        }
+
+        LevelBuilder addFinish(JSONObject coord) {
+            double x = (double) coord.get("x");
+            double y = (double) coord.get("y");
+            String path = "finish.png";
+
+            Finish f = new Finish(x, floorHeight - y, path);
+            entities.add(f);
+            finish = f;
             return this;
         }
 

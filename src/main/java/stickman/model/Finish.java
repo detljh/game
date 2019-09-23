@@ -2,14 +2,14 @@ package stickman.model;
 
 import stickman.controller.Controller;
 
-public class Platform implements Entity {
+public class Finish implements Entity {
     private double xPos;
     private double yPos;
     private String imagePath;
 
-    Platform(double xPos, double yPos, String imagePath) {
+    Finish(double xPos, double yPos, String imagePath) {
         this.xPos = xPos;
-        this.yPos = yPos;
+        this.yPos = yPos - getHeight();
         this.imagePath = imagePath;
     }
 
@@ -30,17 +30,17 @@ public class Platform implements Entity {
 
     @Override
     public double getHeight() {
-        return 20.0;
+        return 40.0;
     }
 
     @Override
     public double getWidth() {
-        return 20.0;
+        return 40.0;
     }
 
     @Override
     public Layer getLayer() {
-        return Layer.FOREGROUND;
+        return Layer.BACKGROUND;
     }
 
     @Override
