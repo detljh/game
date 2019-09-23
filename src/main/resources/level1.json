@@ -16,7 +16,7 @@
   "enemyType": ["moving", "still", "still", "still", "moving"],
   "_platformComment": "x and y position in same index correspond with each other, y position is pixels from the sky",
   "platform": {
-    "x": [40.0, 300.0],
-    "y": [300.0, 200.0]
+    "x": [40.0, 300.0, 100.0, 200.0],
+    "y": [300.0, 200.0, 250.0, 320.0]
   }
 }

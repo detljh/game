@@ -156,7 +156,7 @@ public class LevelImpl implements Level {
         LevelBuilder addHero(JSONObject config) {
             String size = (String) config.get("size");
             double xPos = (double) config.get("x");
-            Hero hero = new Hero("ch_stand1.png", xPos, size, 40.0, floorHeight);
+            Hero hero = new Hero("ch_stand1.png", xPos, size, 60.0, floorHeight);
             HeroController hc = new HeroController(hero);
             hero.setController(hc);
             entities.add(hero);

@@ -69,7 +69,7 @@ public class GameEngineImpl implements GameEngine {
 
     @Override
     public void handleCollision(Entity a, Entity other) {
-        Point2D aPos = new Point2D(a.getXPos(), a.getYPos());
+        Point2D aPos = new Point2D(a.getDesiredX(), a.getDesiredY());
         Point2D otherPos = new Point2D(other.getXPos(), other.getYPos());
 
         Point2D collisionVector = otherPos.subtract(aPos);
@@ -80,7 +80,7 @@ public class GameEngineImpl implements GameEngine {
         } else {
             width = a.getWidth();
         }
-
+        System.out.println(collisionVector);
         if (Math.abs(collisionVector.getX()) > Math.abs(collisionVector.getY())) {
             if (collisionVector.getX() < 0) {
                 a.setDesiredX(other.getXPos() + other.getWidth());
@@ -92,14 +92,16 @@ public class GameEngineImpl implements GameEngine {
                 System.out.println("right");
             }
         } else {
-            if (collisionVector.getY() < 0) {
+            if (collisionVector.getY() > 0) {
                 a.setDesiredY(other.getYPos() - a.getHeight());
                 a.setYVel(0);
                 if (a.equals(currentLevel.getHero())) {
                     HeroController aC = (HeroController) a.getController();
                     aC.setOnFloor(true);
                     aC.setJump(false);
+                    System.out.println("down");
                 }
+
             } else {
                 a.setDesiredY(other.getYPos() + other.getHeight());
                 a.setYVel(0);
@@ -107,6 +109,7 @@ public class GameEngineImpl implements GameEngine {
                     HeroController aC = (HeroController) a.getController();
                     aC.setJump(false);
                 }
+                System.out.println("up");
             }
         }
     }
