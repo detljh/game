@@ -1,0 +1,22 @@
+{
+  "_floorHeightComment": "positive double from the bottom",
+  "floorHeight": 50.0,
+  "width": 640.0,
+  "height": 400.0,
+  "_comment": "This is the sample JSON file. You must use this format for your JSON files as we will be using similar formats when marking your assignment. Anything starting with an underscore (like this _comment) should be ignored.",
+  "_stickmanSizeComment": "Your main character can be tiny, normal, large, or giant. What pixel dimensions these match can be up to you.",
+  "stickman": {
+    "x": 20.0,
+    "size": "normal"
+  },
+  "_stickmanPosComment": "Stickman should start at the x position indicated, with their y position being on your 'floor'. This must be a positive double.",
+  "cloudVelocity": 3.2,
+  "_cloudVelocityComment": "Clouds should move the given number of pixels per second. This must be a positive double.",
+  "_enemyTypeComment": "enemy states: moving, still",
+  "enemyType": ["moving", "still", "still", "still", "moving"],
+  "_platformComment": "x and y position in same index correspond with each other, y position is pixels from the sky",
+  "platform": {
+    "x": [40.0, 300.0],
+    "y": [300.0, 200.0]
+  }
+}

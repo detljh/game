@@ -11,9 +11,5 @@ public interface Level {
 
     double getFloorHeight();
     double getHeroX();
-
-    boolean jump();
-    boolean moveLeft();
-    boolean moveRight();
-    boolean stopMoving();
+    Hero getHero();
 }

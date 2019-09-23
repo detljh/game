@@ -4,7 +4,10 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import stickman.controller.HeroController;
 import stickman.model.GameEngine;
+import stickman.model.Hero;
+
 import java.net.URL;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,15 +15,15 @@ import java.util.Map;
 import java.util.Set;
 
 class KeyboardInputHandler {
-    private final GameEngine model;
+    private final HeroController hc;
     private boolean left = false;
     private boolean right = false;
     private Set<KeyCode> pressedKeys = new HashSet<>();
 
     private Map<String, MediaPlayer> sounds = new HashMap<>();
 
-    KeyboardInputHandler(GameEngine model) {
-        this.model = model;
+    KeyboardInputHandler(HeroController hc) {
+        this.hc = hc;
 
         URL mediaUrl = getClass().getResource("/jump.wav");
         String jumpURL = mediaUrl.toExternalForm();
@@ -32,12 +35,19 @@ class KeyboardInputHandler {
 
     void handlePressed(KeyEvent keyEvent) {
         if (pressedKeys.contains(keyEvent.getCode())) {
+            if (keyEvent.getCode().equals(KeyCode.UP)) {
+                if (hc.jump()) {
+                    MediaPlayer jumpPlayer = sounds.get("jump");
+                    jumpPlayer.stop();
+                    jumpPlayer.play();
+                }
+            }
             return;
         }
         pressedKeys.add(keyEvent.getCode());
 
         if (keyEvent.getCode().equals(KeyCode.UP)) {
-            if (model.jump()) {
+            if (hc.jump()) {
                 MediaPlayer jumpPlayer = sounds.get("jump");
                 jumpPlayer.stop();
                 jumpPlayer.play();
@@ -55,12 +65,12 @@ class KeyboardInputHandler {
 
         if (left) {
             if (right) {
-                model.stopMoving();
+                hc.stopMoving();
             } else {
-                model.moveLeft();
+                hc.moveLeft();
             }
         } else {
-            model.moveRight();
+            hc.moveRight();
         }
     }
 
@@ -77,11 +87,11 @@ class KeyboardInputHandler {
         }
 
         if (!(right || left)) {
-            model.stopMoving();
+            hc.stopMoving();
         } else if (right) {
-            model.moveRight();
+            hc.moveRight();
         } else {
-            model.moveLeft();
+            hc.moveLeft();
         }
     }
 }

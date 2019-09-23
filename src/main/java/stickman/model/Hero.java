@@ -1,72 +1,113 @@
 package stickman.model;
 
+import javafx.geometry.Point2D;
+import stickman.controller.Controller;
+import stickman.controller.HeroController;
+
 public class Hero implements Entity {
     private String imagePath;
     private double xPos;
     private double yPos;
     private String heroSize;
-    private double xVelocity;
-    private double yVelocity;
     private double jumpHeight;
+    private HeroController hc;
+    private double xVel;
+    private double yVel;
+    private double desiredX;
+    private double desiredY;
 
-    Hero(String imagePath, double xPos, double xVelocity, double yVelocity, String heroSize, double jumpHeight,
-         double floorHeight) {
+    Hero(String imagePath, double xPos, String heroSize, double jumpHeight, double floorHeight) {
         this.imagePath = imagePath;
-        this.xPos = xPos;
+        setXPos(xPos);
         this.heroSize = heroSize;
-        this.yPos = floorHeight - getHeight();
-        this.xVelocity = xVelocity;
-        this.yVelocity = yVelocity;
+        setYPos(floorHeight - getHeight());
         this.jumpHeight = jumpHeight;
+        resetVelocityX();
+        resetVelocityY();
+        setDesiredX(getXPos());
+        setDesiredY(getYPos());
+
     }
 
-    double getJumpHeight() {
+    public double getJumpForce() {
+        return 150.0;
+    }
+
+    public double getHorizontalMovement() {
+        return 80.0;
+    }
+
+    public double getJumpHeight() {
         return jumpHeight;
     }
 
-    void resetVelocityX() {
-        this.xVelocity = 200.0 / GameEngineImpl.FPS;
+    public void resetVelocityX() {
+        this.xVel = 0.0;
     }
 
-    void resetVelocityY() {
-        this.yVelocity = 200.0 / GameEngineImpl.FPS;
+    public void resetVelocityY() {
+        this.yVel = 0.0;
     }
 
-    void updateVelocityX(double x) {
-        this.xVelocity = x;
+    @Override
+    public void setXVel(double xVel) {
+        this.xVel = xVel;
     }
 
-    void updateVelocityY(double y) {
-        this.yVelocity = y;
+    @Override
+    public void setYVel(double yVel) {
+        this.yVel = yVel;
     }
 
-    double getVelocityX() {
-        return xVelocity;
-    }
-
-    double getVelocityY() {
-        return yVelocity;
-    }
-
-    void updateX(double x) {
+    @Override
+    public void setXPos(double xPos) {
         // prevent hero from moving off left of screen
-        if (x < 0) {
-            x = 0;
+        if (xPos < 0) {
+            xPos = 0;
         }
-        xPos = x;
+        this.xPos = xPos;
     }
 
-    void updateY(double y) {
-        yPos = y;
+    @Override
+    public void setYPos(double yPos) {
+        this.yPos = yPos;
     }
 
-    void updateImagePath(String path) {
+    public double getXVel() {
+        return xVel;
+    }
+
+    public double getYVel() {
+        return yVel;
+    }
+
+    @Override
+    public void setDesiredX(double xPos) {
+        desiredX = xPos;
+    }
+
+    @Override
+    public void setDesiredY(double yPos) {
+        desiredY = yPos;
+    }
+
+    public void updateImagePath(String path) {
         imagePath = path;
     }
 
     @Override
     public String getImagePath() {
         return imagePath;
+    }
+
+    @Override
+    public double getDesiredX() {
+        return desiredX;
+    }
+
+    @Override
+    public double getDesiredY() {
+        return desiredY;
     }
 
     @Override
@@ -104,5 +145,15 @@ public class Hero implements Entity {
     @Override
     public Layer getLayer() {
         return Layer.FOREGROUND;
+    }
+
+    @Override
+    public void setController(Controller c) {
+        hc = (HeroController) c;
+    }
+
+    @Override
+    public Controller getController() {
+        return hc;
     }
 }

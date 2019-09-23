@@ -3,8 +3,10 @@ package stickman.view;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
+import stickman.controller.HeroController;
 import stickman.model.Entity;
 import stickman.model.GameEngine;
 import java.util.ArrayList;
@@ -19,22 +21,23 @@ public class GameWindow {
     private BackgroundDrawer backgroundDrawer;
 
     private double xViewportOffset = 0.0;
-    private static final double VIEWPORT_MARGIN = 280.0;
+    private static double VIEWPORT_MARGIN;
 
     public GameWindow(GameEngine model, int width, int height) {
         this.model = model;
         this.pane = new Pane();
         this.width = width;
         this.scene = new Scene(pane, width, height);
+        this.VIEWPORT_MARGIN = width * 2/5;
 
         this.entityViews = new ArrayList<>();
 
-        KeyboardInputHandler keyboardInputHandler = new KeyboardInputHandler(model);
+        KeyboardInputHandler keyboardInputHandler = new KeyboardInputHandler((HeroController) model.getCurrentLevel().getHero().getController());
 
         scene.setOnKeyPressed(keyboardInputHandler::handlePressed);
         scene.setOnKeyReleased(keyboardInputHandler::handleReleased);
 
-        this.backgroundDrawer = new BlockedBackground();
+        this.backgroundDrawer = new ParallaxBackground();
 
         backgroundDrawer.draw(model, pane);
     }
@@ -82,7 +85,7 @@ public class GameWindow {
 
         backgroundDrawer.update(xViewportOffset);
 
-        for (Entity entity: entities) {
+        for (Entity entity : entities) {
             boolean notFound = true;
             for (EntityView view: entityViews) {
                 if (view.matchesEntity(entity)) {

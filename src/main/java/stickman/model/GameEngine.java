@@ -5,11 +5,9 @@ public interface GameEngine {
 
     void startLevel();
 
-    // Hero inputs - boolean for success (possibly for sound feedback)
-    boolean jump();
-    boolean moveLeft();
-    boolean moveRight();
-    boolean stopMoving();
-
     void tick() throws InterruptedException;
+
+    boolean checkCollision(Entity a, Entity other);
+    void handleCollision(Entity a, Entity other);
+    void update();
 }
