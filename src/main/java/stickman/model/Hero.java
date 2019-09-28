@@ -1,31 +1,38 @@
 package stickman.model;
 
+import stickman.collision.CollisionStrategy;
+import stickman.collision.HeroCollisionStrategy;
 import stickman.controller.Controller;
 import stickman.controller.HeroController;
 
-public class Hero implements Entity {
-    private String imagePath;
-    private double xPos;
-    private double yPos;
+public class Hero extends MoveableEntity {
     private String heroSize;
     private double jumpHeight;
     private HeroController hc;
-    private double xVel;
-    private double yVel;
-    private double desiredX;
-    private double desiredY;
+    private double initialX;
+    private double initialY;
+    private static int lives = 3;
 
     Hero(String imagePath, double xPos, String heroSize, double jumpHeight, double floorHeight) {
-        this.imagePath = imagePath;
+        super(xPos, imagePath);
         setXPos(xPos);
         this.heroSize = heroSize;
         setYPos(floorHeight - getHeight());
         this.jumpHeight = jumpHeight;
-        resetVelocityX();
-        resetVelocityY();
+        setXVel(0.0);
+        setYVel(0.0);
         setDesiredX(getXPos());
         setDesiredY(getYPos());
+        initialX = xPos;
+        initialY = floorHeight - getHeight();
+    }
 
+    public double getInitialX() {
+        return initialX;
+    }
+
+    public double getInitialY() {
+        return  initialY;
     }
 
     public double getJumpForce() {
@@ -40,83 +47,9 @@ public class Hero implements Entity {
         return jumpHeight;
     }
 
-    public void resetVelocityX() {
-        this.xVel = 0.0;
-    }
-
-    public void resetVelocityY() {
-        this.yVel = 0.0;
-    }
-
     @Override
-    public void setXVel(double xVel) {
-        this.xVel = xVel;
-    }
-
-    @Override
-    public void setYVel(double yVel) {
-        this.yVel = yVel;
-    }
-
-    @Override
-    public void setXPos(double xPos) {
-        // prevent hero from moving off left of screen
-        if (xPos < 0) {
-            xPos = 0;
-        }
-        this.xPos = xPos;
-    }
-
-    @Override
-    public void setYPos(double yPos) {
-        this.yPos = yPos;
-    }
-
-    public double getXVel() {
-        return xVel;
-    }
-
-    public double getYVel() {
-        return yVel;
-    }
-
-    @Override
-    public void setDesiredX(double xPos) {
-        desiredX = xPos;
-    }
-
-    @Override
-    public void setDesiredY(double yPos) {
-        desiredY = yPos;
-    }
-
-    public void updateImagePath(String path) {
-        imagePath = path;
-    }
-
-    @Override
-    public String getImagePath() {
-        return imagePath;
-    }
-
-    @Override
-    public double getDesiredX() {
-        return desiredX;
-    }
-
-    @Override
-    public double getDesiredY() {
-        return desiredY;
-    }
-
-    @Override
-    public double getXPos() {
-        return xPos;
-    }
-
-    @Override
-    public double getYPos() {
-        return yPos;
+    public CollisionStrategy getCollisionStrategy() {
+        return new HeroCollisionStrategy(hc);
     }
 
     @Override
@@ -154,5 +87,13 @@ public class Hero implements Entity {
     @Override
     public Controller getController() {
         return hc;
+    }
+
+    public void decrementLives() {
+        lives--;
+    }
+
+    public int getRemainingLives() {
+        return lives;
     }
 }

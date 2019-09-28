@@ -11,6 +11,7 @@ import stickman.model.GameEngine;
 public class ParallaxBackground implements BackgroundDrawer {
 
     private double width;
+    private double height;
     private Image[] images;
     private ImageView[] imageViews;
     private double[] parallaxEffect;
@@ -18,6 +19,7 @@ public class ParallaxBackground implements BackgroundDrawer {
     @Override
     public void draw(GameEngine model, Pane pane) {
         this.width = pane.getWidth();
+        this.height = pane.getHeight();
         double height = pane.getHeight();
         double floorHeight = model.getCurrentLevel().getFloorHeight();
 
@@ -64,15 +66,17 @@ public class ParallaxBackground implements BackgroundDrawer {
     }
 
     @Override
-    public void update(double xViewportOffset) {
+    public void update(double xViewportOffset, double yViewportOffset) {
 
 
         for (int i = 0;i < 6; i++) {
             double rawHeight = images[i].getHeight();
             double rawWidth = images[i].getWidth() / 2; // images are all double stitched
             double widthScale = rawWidth / width;
-            double translation = (xViewportOffset * widthScale * parallaxEffect[i]) % rawWidth;
-            imageViews[i].setViewport(new Rectangle2D(translation, 0, rawWidth, rawHeight));
+            double heightScale = rawHeight / height;
+            double translationX = (xViewportOffset * widthScale * parallaxEffect[i]) % rawWidth;
+            double translationY = (yViewportOffset * heightScale * parallaxEffect[i]) % rawHeight;
+            imageViews[i].setViewport(new Rectangle2D(translationX, -translationY, rawWidth, rawHeight));
         }
     }
 }

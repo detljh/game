@@ -3,6 +3,7 @@ package stickman.model;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import stickman.controller.CloudController;
+import stickman.controller.EnemyController;
 import stickman.controller.HeroController;
 
 import java.util.ArrayList;
@@ -14,16 +15,15 @@ public class LevelImpl implements Level {
     private List<Entity> entities;
     private List<Cloud> clouds;
     private List<Enemy> enemies;
+    private List<MoveableEntity> moveableEntities;
     private double height;
     private double width;
     public double floorHeight;
     private Hero hero;
     private int tick;
-    private int cloudCount;
     private double cloudVelocity;
-    private int enemyCount;
-    private int platformCount;
     private Finish finish;
+    private String levelState;
 
 
     LevelImpl(LevelBuilder builder) {
@@ -34,14 +34,16 @@ public class LevelImpl implements Level {
         this.floorHeight = builder.floorHeight;
         this.hero = builder.hero;
         hero.getController().setLevel(this);
-        this.cloudCount = builder.cloudCount;
         this.cloudVelocity = builder.cloudVelocity;
-        this.enemyCount = builder.enemyCount;
-        this.platformCount = builder.platformCount;
         this.finish = builder.finish;
         this.clouds = builder.clouds;
         this.enemies = builder.enemies;
+        this.moveableEntities = builder.abstractEntities;
         tick = (int) ((width * 4 / 5) / (cloudVelocity / GameEngineImpl.FPS));
+
+        for (int i = 0; i < moveableEntities.size(); i++) {
+            moveableEntities.get(i).getController().setLevel(this);
+        }
     }
 
     private void addCloud(double velocity) {
@@ -52,7 +54,6 @@ public class LevelImpl implements Level {
         /* spawn them on screen, else spawn them off screen so they move in screen from
          * left of screen */
         double xPos = -(width/4) - (rand.nextDouble() * (width));
-        System.out.println(xPos);
         // randomise y position of cloud
         double yPos = rand.nextDouble() * (getHeight() / 4.5);
         String path = "cloud_" + cloudType + ".png";
@@ -62,24 +63,30 @@ public class LevelImpl implements Level {
         cc.setLevel(this);
         entities.add(c);
         clouds.add(c);
-        cloudCount++;
+        moveableEntities.add(c);
     }
 
     public Finish getFinish() {
         return finish;
     }
 
-    public boolean isEnemy(Entity other) {
-        for (int i = 0; i < enemies.size(); i++) {
-            if (other.equals(enemies.get(i))) {
+    @Override
+    public void setLevelState(String state) {
+        levelState = state;
+    }
+
+    @Override
+    public String getLevelState() {
+        return levelState;
+    }
+
+    public boolean isEnemy(Entity a) {
+        for (Enemy enemy : enemies) {
+            if (a.equals(enemy)) {
                 return true;
             }
         }
         return false;
-    }
-
-    public int getCloudCount() {
-        return cloudCount;
     }
 
     public double getGravity() {
@@ -91,9 +98,17 @@ public class LevelImpl implements Level {
         return hero;
     }
 
+    public List<MoveableEntity> getMoveableEntities() {
+        return moveableEntities;
+    }
+
     @Override
     public List<Entity> getEntities() {
         return entities;
+    }
+
+    public List<Enemy> getEnemies() {
+        return enemies;
     }
 
     @Override
@@ -108,10 +123,6 @@ public class LevelImpl implements Level {
 
     @Override
     public void tick() {
-        for (int i = 0; i < clouds.size(); i++) {
-            clouds.get(i).getController().tick();
-        }
-
         // spawn 1-3 clouds if tick is 0 and velocity is positive
         if (cloudVelocity > 0) {
 
@@ -143,23 +154,19 @@ public class LevelImpl implements Level {
         private List<Entity> entities;
         private List<Cloud> clouds;
         private List<Enemy> enemies;
+        private List<MoveableEntity> abstractEntities;
         private double height;
         private double width;
         private double floorHeight;
         private Hero hero;
-        private int cloudCount;
         private double cloudVelocity;
-        private int enemyCount;
-        private int platformCount;
         private Finish finish;
 
         LevelBuilder() {
-            cloudCount = 0;
-            enemyCount = 0;
-            platformCount = 0;
             entities = new ArrayList<>();
             clouds = new ArrayList<>();
             enemies = new ArrayList<>();
+            abstractEntities = new ArrayList<>();
             gravity = 9.8 / GameEngineImpl.FPS;
         }
 
@@ -181,15 +188,46 @@ public class LevelImpl implements Level {
         LevelBuilder addHero(JSONObject config) {
             String size = (String) config.get("size");
             double xPos = (double) config.get("x");
-            Hero hero = new Hero("ch_stand1.png", xPos, size, 60.0, floorHeight);
+            double jumpHeight = (double) config.get("jumpHeight");
+            Hero hero = new Hero("ch_stand1.png", xPos, size, jumpHeight, floorHeight);
             HeroController hc = new HeroController(hero);
             hero.setController(hc);
             entities.add(hero);
+            abstractEntities.add(hero);
             this.hero = hero;
             return this;
         }
 
-        LevelBuilder addEnemy(JSONArray enemies) {
+        LevelBuilder addEnemy(JSONObject enemies) {
+            JSONArray type = (JSONArray) enemies.get("enemyType");
+            JSONArray x = (JSONArray) enemies.get("x");
+            JSONArray y = (JSONArray) enemies.get("y");
+            Random rand = new Random();
+
+            String[] enemyImage = {"B", "G", "P", "R", "Y"};
+            String enemyStance;
+            if (rand.nextInt(2) == 0) {
+                enemyStance = "a";
+            } else {
+                enemyStance = "b";
+            }
+
+            for (int i = 0; i < type.size(); i++) {
+                int enemyType;
+                if (type.get(i).equals("still")) {
+                    enemyType = 4;
+                } else {
+                    enemyType = rand.nextInt(4);
+                }
+
+                String path = "slime" + enemyImage[enemyType] + enemyStance + ".png";
+                Enemy e = new Enemy((double) x.get(i), floorHeight - (double) y.get(i), path, (String) type.get(i));
+                EnemyController ec = new EnemyController(e);
+                e.setController(ec);
+                this.enemies.add(e);
+                entities.add(e);
+                abstractEntities.add(e);
+            }
 
             return this;
         }
@@ -220,18 +258,22 @@ public class LevelImpl implements Level {
             c.setController(cc);
             entities.add(c);
             clouds.add(c);
-            cloudCount++;
+            abstractEntities.add(c);
         }
 
         LevelBuilder addPlatform(JSONObject coord) {
             JSONArray x = (JSONArray)coord.get("x");
             JSONArray y = (JSONArray)coord.get("y");
-            String path = "foot_tile.png";
+            JSONArray type = (JSONArray)coord.get("platformType");
 
             for (int i = 0; i < x.size(); i++) {
+                String path = "foot_tile.png";
+                if (type.get(i).toString().equals("icy")) {
+                    path = "foot_tile_icy.png";
+                }
+
                 Platform p = new Platform((double) x.get(i), floorHeight - (double) y.get(i), path);
                 entities.add(p);
-                platformCount++;
             }
             return this;
         }

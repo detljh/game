@@ -1,8 +1,6 @@
 package stickman.controller;
 
-import stickman.model.Cloud;
-import stickman.model.GameEngineImpl;
-import stickman.model.LevelImpl;
+import stickman.model.*;
 
 import java.util.Random;
 
@@ -42,7 +40,17 @@ public class CloudController implements Controller {
     }
 
     @Override
+    public void move() {
+
+    }
+
+    @Override
     public void setLevel(LevelImpl level) {
         this.level = level;
+    }
+
+    @Override
+    public Level getLevel() {
+        return level;
     }
 }

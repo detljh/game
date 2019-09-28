@@ -12,4 +12,9 @@ public interface Level {
     double getFloorHeight();
     double getHeroX();
     Hero getHero();
+    Finish getFinish();
+    String getLevelState();
+    void setLevelState(String state);
+    boolean isEnemy(Entity a);
+
 }

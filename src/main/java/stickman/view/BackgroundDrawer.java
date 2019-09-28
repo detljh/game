@@ -5,5 +5,5 @@ import stickman.model.GameEngine;
 
 public interface BackgroundDrawer {
     void draw(GameEngine model, Pane pane);
-    void update(double xViewportOffset);
+    void update(double xViewportOffset, double yViewPortOffset);
 }

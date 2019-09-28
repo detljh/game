@@ -1,18 +1,14 @@
 package stickman.view;
 
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import stickman.controller.HeroController;
 import stickman.model.Entity;
@@ -22,6 +18,7 @@ import java.util.List;
 
 public class GameWindow {
     private final int width;
+    private final int height;
     private Scene scene;
     private Pane pane;
     private GameEngine model;
@@ -32,14 +29,18 @@ public class GameWindow {
     private Timeline timeline;
 
     private double xViewportOffset = 0.0;
-    private static double VIEWPORT_MARGIN;
+    private static double VIEWPORT_MARGIN_X;
+    private double yViewportOffset = 0.0;
+    private static double VIEWPORT_MARGIN_Y;
 
     public GameWindow(GameEngine model, int width, int height) {
         this.model = model;
         this.pane = new Pane();
         this.width = width;
+        this.height = height;
         this.scene = new Scene(pane, width, height);
-        this.VIEWPORT_MARGIN = width * 2/5;
+        this.VIEWPORT_MARGIN_X = width * 2/5;
+        this.VIEWPORT_MARGIN_Y = height * 3/5;
 
         time = new Text();
         time.setFill(Color.BLACK);
@@ -95,7 +96,12 @@ public class GameWindow {
             return;
         }
 
-        if (model.finish().equals("won")) {
+        if (timeline.getStatus().equals(Animation.Status.STOPPED)) {
+            return;
+        }
+
+        setLives();
+        if (model.getState().equals("won")) {
             for (Node n : pane.getChildren()) {
                 n.setOpacity(0.5);
             }
@@ -107,7 +113,7 @@ public class GameWindow {
             gameOverText.setY(scene.getHeight() / 2);
             pane.getChildren().add(gameOverText);
             timeline.stop();
-        } else if (model.finish().equals("lost")) {
+        } else if (model.getState().equals("lost")) {
             for (Node n : pane.getChildren()) {
                 n.setOpacity(0.5);
             }
@@ -115,11 +121,12 @@ public class GameWindow {
             gameOverText.setFill(Color.BLACK);
             gameOverText.setFont(Font.font(20));
             gameOverText.setViewOrder(0.0);
+            gameOverText.setX(width / 3);
+            gameOverText.setY(scene.getHeight() / 2);
             pane.getChildren().add(gameOverText);
             timeline.stop();
         } else {
             setTimer();
-            setLives();
         }
 
         List<Entity> entities = model.getCurrentLevel().getEntities();
@@ -131,26 +138,39 @@ public class GameWindow {
         double heroXPos = model.getCurrentLevel().getHeroX();
         heroXPos -= xViewportOffset;
 
-        if (heroXPos < VIEWPORT_MARGIN) {
+        double heroYPos = model.getCurrentLevel().getHero().getDesiredY();
+        heroYPos += yViewportOffset;
 
+        if (heroXPos < VIEWPORT_MARGIN_X) {
             if (xViewportOffset >= 0) { // Don't go further left than the start of the level
-                xViewportOffset -= VIEWPORT_MARGIN - heroXPos;
+                xViewportOffset -= VIEWPORT_MARGIN_X - heroXPos;
                 if (xViewportOffset < 0) {
                     xViewportOffset = 0;
                 }
             }
-        } else if (heroXPos > width - VIEWPORT_MARGIN) {
-            xViewportOffset += heroXPos - (width - VIEWPORT_MARGIN);
+        } else if (heroXPos > width - VIEWPORT_MARGIN_X) {
+            xViewportOffset += heroXPos - (width - VIEWPORT_MARGIN_X);
         }
 
-        backgroundDrawer.update(xViewportOffset);
+        if (heroYPos > VIEWPORT_MARGIN_Y) {
+            if (yViewportOffset >= 0) { // Don't go further than bottom of screen
+                yViewportOffset -= heroYPos - VIEWPORT_MARGIN_Y;
+                if (yViewportOffset < 0) {
+                    yViewportOffset = 0;
+                }
+            }
+        } else if (heroYPos < height - VIEWPORT_MARGIN_Y) {
+            yViewportOffset += (height - VIEWPORT_MARGIN_Y) - heroYPos;
+        }
+
+        backgroundDrawer.update(xViewportOffset, yViewportOffset);
 
         for (Entity entity : entities) {
             boolean notFound = true;
             for (EntityView view: entityViews) {
                 if (view.matchesEntity(entity)) {
                     notFound = false;
-                    view.update(xViewportOffset);
+                    view.update(xViewportOffset, yViewportOffset);
                     break;
                 }
             }

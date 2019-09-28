@@ -1,23 +1,21 @@
 package stickman.model;
 
-import javafx.geometry.Point2D;
-import org.graalvm.compiler.lir.sparc.SPARCMove;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import stickman.collision.CollisionStrategy;
 import stickman.controller.HeroController;
 
 import java.io.File;
 import java.io.FileReader;
 import java.net.URI;
 import java.text.DecimalFormat;
+import java.util.List;
 
 public class GameEngineImpl implements GameEngine {
     public static final int FPS = (int) (1000 / 0.017) / 1000;
     private JSONObject configuration;
     private LevelImpl currentLevel;
-    private static int lives = 3;
-    private String finish = "";
+    private String state = "";
     private int tick = 0;
 
     public GameEngineImpl(String fileName) {
@@ -46,96 +44,32 @@ public class GameEngineImpl implements GameEngine {
         .setFloorHeight((double) configuration.get("floorHeight"))
         .addPlatform((JSONObject) configuration.get("platform"))
         .addHero((JSONObject) configuration.get("stickman"))
-        .addEnemy((JSONArray) configuration.get("enemyType"))
+        .addEnemy((JSONObject) configuration.get("enemy"))
         .spawnClouds((Double) configuration.get("cloudVelocity"))
         .addFinish((JSONObject) configuration.get("finish"))
         .build();
     }
 
     @Override
-    public String finish() {
-        return finish;
+    public String getState() {
+        return state;
     }
 
     @Override
     public int getLives() {
-        return lives;
-    }
-
-    @Override
-    public boolean checkCollision(Entity a, Entity other) {
-        if (a.equals(other)) {
-            return false;
-        }
-
-        double width;
-        if (a.equals(currentLevel.getHero())) {
-            width = a.getWidth() / 2;
-        } else {
-            width = a.getWidth();
-        }
-
-        return (a.getDesiredX() < (other.getXPos() + other.getWidth())) &&
-                ((a.getDesiredX() + width) > other.getXPos()) &&
-                (a.getDesiredY() < (other.getYPos() + other.getHeight())) &&
-                ((a.getDesiredY() + a.getHeight()) > other.getYPos());
-    }
-
-    @Override
-    public void handleCollision(Entity a, Entity other) {
-        if (other.equals(currentLevel.getFinish())) {
-            finish = "won";
-            return;
-        }
-
-        Point2D aPos = new Point2D(a.getDesiredX(), a.getDesiredY());
-        Point2D otherPos = new Point2D(other.getXPos(), other.getYPos());
-
-        Point2D collisionVector = otherPos.subtract(aPos);
-        collisionVector = collisionVector.normalize();
-        double width;
-        if (a.equals(currentLevel.getHero())) {
-            width = a.getWidth() / 2;
-        } else {
-            width = a.getWidth();
-        }
-
-        if (Math.abs(collisionVector.getX()) > Math.abs(collisionVector.getY())) {
-            if (collisionVector.getX() < 0) {
-                a.setDesiredX(other.getXPos() + other.getWidth());
-                a.setXVel(0);
-            } else {
-                a.setDesiredX(other.getXPos() - width);
-                a.setXVel(0);
-            }
-        } else {
-            if (collisionVector.getY() > 0) {
-                a.setDesiredY(other.getYPos() - a.getHeight());
-                a.setYVel(0);
-                if (a.equals(currentLevel.getHero())) {
-                    HeroController aC = (HeroController) a.getController();
-                    aC.setOnFloor(true);
-                    aC.setJump(false);
-                }
-
-            } else {
-                a.setDesiredY(other.getYPos() + other.getHeight());
-                a.setYVel(0);
-                if (a.equals(currentLevel.getHero())) {
-                    HeroController aC = (HeroController) a.getController();
-                    aC.setJump(false);
-                }
-            }
-        }
+        return Math.max(currentLevel.getHero().getRemainingLives(), 0);
     }
 
     @Override
     public void update() {
         double gravity = currentLevel.getGravity();
-        Hero hero = currentLevel.getHero();
-        hero.setYVel(hero.getYVel() + gravity);
-        double yVel = hero.getYVel() / (FPS / 15);
-        hero.setDesiredY(hero.getYPos() + yVel);
+        List<MoveableEntity> moveableEntities = currentLevel.getMoveableEntities();
+        for (int i = 0; i < moveableEntities.size(); i++) {
+            MoveableEntity entity = moveableEntities.get(i);
+            entity.setYVel(entity.getYVel() + gravity);
+            double yVel = entity.getYVel() / (FPS / 15);
+            entity.setDesiredY(entity.getYPos() + yVel);
+        }
     }
 
     @Override
@@ -155,23 +89,26 @@ public class GameEngineImpl implements GameEngine {
         Hero hero = currentLevel.getHero();
         hc.setOnFloor(false);
 
-        // call hero controller tick to perform movements
-        currentLevel.getHero().getController().tick();
-        for (Entity a : currentLevel.getEntities()) {
+//        // call hero controller tick to perform movements
+//        currentLevel.getHero().getController().tick();
+        for (MoveableEntity a : currentLevel.getMoveableEntities()) {
+            a.getController().tick();
             for (Entity other : currentLevel.getEntities()) {
-                if (checkCollision(a, other)) {
-                    if (currentLevel.isEnemy(other)) {
-                        lives--;
-                        if (lives == 0) {
-                            finish = "lost";
-                        }
-                    }
-                    handleCollision(a, other);
-                    break;
+                CollisionStrategy strat = a.getCollisionStrategy();
+                if (strat.checkCollision(a, other)) {
+                     String out = strat.handleCollision(a, other);
+                     if (out != null) {
+                         state = out;
+                     }
                 }
             }
         }
 
-        hc.move();
+        for (MoveableEntity a : currentLevel.getMoveableEntities()) {
+            if (a.getController() != null) {
+                a.getController().move();
+            }
+        }
+
     }
 }

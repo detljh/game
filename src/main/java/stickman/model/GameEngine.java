@@ -7,10 +7,8 @@ public interface GameEngine {
 
     void tick() throws InterruptedException;
 
-    boolean checkCollision(Entity a, Entity other);
-    void handleCollision(Entity a, Entity other);
     void update();
-    String finish();
+    String getState();
     String getTime();
     int getLives();
 }

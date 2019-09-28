@@ -16,7 +16,7 @@ public class EntityViewImpl implements EntityView {
         this.imagePath = entity.getImagePath();
         this.node = new ImageView(imagePath);
         this.node.setViewOrder(getViewOrder(entity.getLayer()));
-        update(0);
+        update(0, 0);
     }
 
     private double getViewOrder(Entity.Layer layer) {
@@ -29,14 +29,14 @@ public class EntityViewImpl implements EntityView {
     }
 
     @Override
-    public void update(double xViewportOffset) {
+    public void update(double xViewportOffset, double yViewportOffset) {
         String newPath = entity.getImagePath();
         if (!imagePath.equals(newPath)) {
             imagePath = newPath;
             node.setImage(new Image(imagePath));
         }
         node.setX(entity.getXPos() - xViewportOffset);
-        node.setY(entity.getYPos());
+        node.setY(entity.getYPos() + yViewportOffset);
         node.setFitHeight(entity.getHeight());
         node.setFitWidth(entity.getWidth());
         node.setPreserveRatio(true);

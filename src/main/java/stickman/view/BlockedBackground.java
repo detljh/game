@@ -32,7 +32,7 @@ public class BlockedBackground implements BackgroundDrawer {
     }
 
     @Override
-    public void update(double xViewportOffset) {
+    public void update(double xViewportOffset, double yViewPortOffset) {
         // do nothing since this is a static bg
     }
 }

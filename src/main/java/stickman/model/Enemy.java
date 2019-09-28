@@ -1,96 +1,67 @@
 package stickman.model;
 
+import stickman.collision.CollisionStrategy;
+import stickman.collision.EnemyCollisionStrategy;
 import stickman.controller.Controller;
+import stickman.controller.EnemyController;
 
-public class Enemy implements Entity {
-    @Override
-    public String getImagePath() {
-        return null;
+public class Enemy extends MoveableEntity {
+    private double xPos;
+    private double yPos;
+    private String imagePath;
+    private EnemyController ec;
+    private String type;
+    private double xVel;
+    private double yVel;
+    private double desiredX;
+    private double desiredY;
+
+    Enemy(double xPos, double yPos, String imagePath, String type) {
+        super(xPos, imagePath);
+        this.type = type;
+        this.yPos = yPos - getHeight();
+        setDesiredX(getXPos());
+        setDesiredY(getYPos());
+    }
+
+    public String getType() {
+        return type;
     }
 
     @Override
-    public double getDesiredX() {
-        return 0;
-    }
-
-    @Override
-    public double getDesiredY() {
-        return 0;
-    }
-
-    @Override
-    public double getXPos() {
-        return 0;
-    }
-
-    @Override
-    public double getYPos() {
-        return 0;
-    }
-
-    @Override
-    public double getXVel() {
-        return 0;
-    }
-
-    @Override
-    public double getYVel() {
-        return 0;
-    }
-
-    @Override
-    public void setDesiredX(double xPos) {
-
-    }
-
-    @Override
-    public void setDesiredY(double yPos) {
-
-    }
-
-    @Override
-    public void setXVel(double xVel) {
-
-    }
-
-    @Override
-    public void setYVel(double yVel) {
-
-    }
-
-    @Override
-    public void setXPos(double xPos) {
-
-    }
-
-    @Override
-    public void setYPos(double yPos) {
-
+    public CollisionStrategy getCollisionStrategy() {
+        return new EnemyCollisionStrategy(ec);
     }
 
     @Override
     public double getHeight() {
-        return 0;
+        if ("still".equals(type)) {
+            return 40.0;
+        }
+        return 20.0;
     }
 
     @Override
     public double getWidth() {
-        return 0;
+        if ("still".equals(type)) {
+            return 40.0;
+        }
+        return 20.0;
     }
 
     @Override
     public Layer getLayer() {
-        return null;
+        return Layer.FOREGROUND;
     }
 
     @Override
     public void setController(Controller c) {
-
+        ec = (EnemyController) c;
     }
 
     @Override
     public Controller getController() {
-        return null;
+        return ec;
     }
 
 }

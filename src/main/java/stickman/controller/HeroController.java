@@ -29,6 +29,19 @@ public class HeroController implements Controller {
     }
 
     @Override
+    public Level getLevel() {
+        return level;
+    }
+
+    public void decrementLives() {
+        hero.decrementLives();
+    }
+
+    public int getRemainingLives() {
+        return hero.getRemainingLives();
+    }
+
+    @Override
     public boolean jump() {
         double jumpForce = hero.getJumpForce() / time;
         double yVel = hero.getYVel() / (time / 15);
@@ -133,6 +146,11 @@ public class HeroController implements Controller {
     public void move() {
         hero.setXPos(hero.getDesiredX());
         hero.setYPos(hero.getDesiredY());
+    }
+
+    public void restartHero() {
+        hero.setDesiredX(hero.getInitialX());
+        hero.setDesiredY(hero.getInitialY());
     }
 
     @Override

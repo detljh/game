@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.0.8'
+    id 'jacoco'
 }
 
 version '1.0-SNAPSHOT'
@@ -21,5 +22,19 @@ javafx {
     version = "12.0.2"
     modules = [ 'javafx.controls', 'javafx.media', 'javafx.graphics']
 }
+
+jacoco {
+    toolVersion = "0.8.4"
+    reportsDir = file("$buildDir/customJacocoReportDir")
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination file("${buildDir}/jacocoHtml")
+    }
+}
+
 
 mainClassName = 'stickman.App'
