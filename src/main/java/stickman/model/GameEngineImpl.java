@@ -1,13 +1,9 @@
 package stickman.model;
 
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import stickman.collision.CollisionStrategy;
 import stickman.controller.HeroController;
 
-import java.io.File;
-import java.io.FileReader;
-import java.net.URI;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -18,15 +14,8 @@ public class GameEngineImpl implements GameEngine {
     private String state = "";
     private int tick = 0;
 
-    public GameEngineImpl(String fileName) {
-        try {
-            URI uri = new URI(this.getClass().getResource("/" + fileName).toString());
-            JSONParser jp = new JSONParser();
-            configuration = (JSONObject) jp.parse(new FileReader(new File(uri.getPath())));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+    public GameEngineImpl(JSONObject file) {
+        configuration = file;
         startLevel();
     }
 
@@ -63,9 +52,9 @@ public class GameEngineImpl implements GameEngine {
     @Override
     public void update() {
         double gravity = currentLevel.getGravity();
-        List<MoveableEntity> moveableEntities = currentLevel.getMoveableEntities();
+        List<MovableEntity> moveableEntities = currentLevel.getMovableEntities();
         for (int i = 0; i < moveableEntities.size(); i++) {
-            MoveableEntity entity = moveableEntities.get(i);
+            MovableEntity entity = moveableEntities.get(i);
             entity.setYVel(entity.getYVel() + gravity);
             double yVel = entity.getYVel() / (FPS / 15);
             entity.setDesiredY(entity.getYPos() + yVel);
@@ -86,12 +75,9 @@ public class GameEngineImpl implements GameEngine {
         currentLevel.tick();
 
         HeroController hc = (HeroController) currentLevel.getHero().getController();
-        Hero hero = currentLevel.getHero();
         hc.setOnFloor(false);
 
-//        // call hero controller tick to perform movements
-//        currentLevel.getHero().getController().tick();
-        for (MoveableEntity a : currentLevel.getMoveableEntities()) {
+        for (MovableEntity a : currentLevel.getMovableEntities()) {
             a.getController().tick();
             for (Entity other : currentLevel.getEntities()) {
                 CollisionStrategy strat = a.getCollisionStrategy();
@@ -104,11 +90,10 @@ public class GameEngineImpl implements GameEngine {
             }
         }
 
-        for (MoveableEntity a : currentLevel.getMoveableEntities()) {
+        for (MovableEntity a : currentLevel.getMovableEntities()) {
             if (a.getController() != null) {
                 a.getController().move();
             }
         }
-
     }
 }

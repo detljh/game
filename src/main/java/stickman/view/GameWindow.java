@@ -39,8 +39,8 @@ public class GameWindow {
         this.width = width;
         this.height = height;
         this.scene = new Scene(pane, width, height);
-        this.VIEWPORT_MARGIN_X = width * 2/5;
-        this.VIEWPORT_MARGIN_Y = height * 3/5;
+        VIEWPORT_MARGIN_X = width * 2/5;
+        VIEWPORT_MARGIN_Y = height * 3/5;
 
         time = new Text();
         time.setFill(Color.BLACK);
@@ -64,7 +64,6 @@ public class GameWindow {
         scene.setOnKeyReleased(keyboardInputHandler::handleReleased);
 
         this.backgroundDrawer = new ParallaxBackground();
-
         backgroundDrawer.draw(model, pane);
     }
 
@@ -88,6 +87,21 @@ public class GameWindow {
         lives.setText("Lives: " + model.getLives());
     }
 
+    private void setGameOverText(String s) {
+        for (Node n : pane.getChildren()) {
+            n.setOpacity(0.5);
+        }
+
+        Text gameOverText = new Text(s);
+        gameOverText.setFill(Color.BLACK);
+        gameOverText.setFont(Font.font(20));
+        gameOverText.setViewOrder(0.0);
+        gameOverText.setX(width / 3);
+        gameOverText.setY(scene.getHeight() / 2);
+        pane.getChildren().add(gameOverText);
+        timeline.stop();
+    }
+
     private void draw() {
         try {
             model.tick();
@@ -102,29 +116,9 @@ public class GameWindow {
 
         setLives();
         if (model.getState().equals("won")) {
-            for (Node n : pane.getChildren()) {
-                n.setOpacity(0.5);
-            }
-            Text gameOverText = new Text("Congratulations!\n You have won!");
-            gameOverText.setFill(Color.BLACK);
-            gameOverText.setFont(Font.font(20));
-            gameOverText.setViewOrder(0.0);
-            gameOverText.setX(width / 3);
-            gameOverText.setY(scene.getHeight() / 2);
-            pane.getChildren().add(gameOverText);
-            timeline.stop();
+            setGameOverText("Congratulations!\n You have won!");
         } else if (model.getState().equals("lost")) {
-            for (Node n : pane.getChildren()) {
-                n.setOpacity(0.5);
-            }
-            Text gameOverText = new Text("Game Over!");
-            gameOverText.setFill(Color.BLACK);
-            gameOverText.setFont(Font.font(20));
-            gameOverText.setViewOrder(0.0);
-            gameOverText.setX(width / 3);
-            gameOverText.setY(scene.getHeight() / 2);
-            pane.getChildren().add(gameOverText);
-            timeline.stop();
+            setGameOverText("Game Over!");
         } else {
             setTimer();
         }

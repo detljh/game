@@ -1,6 +1,9 @@
 package stickman.controller;
 
-import stickman.model.*;
+import stickman.model.Enemy;
+import stickman.model.GameEngineImpl;
+import stickman.model.Level;
+import stickman.model.LevelImpl;
 
 import java.util.Random;
 
@@ -16,10 +19,6 @@ public class EnemyController implements Controller {
 
     public EnemyController(Enemy e) {
         this.e = e;
-    }
-
-    public void kill() {
-        level.getEntities().remove(e);
     }
 
     @Override
@@ -114,5 +113,9 @@ public class EnemyController implements Controller {
     @Override
     public Level getLevel() {
         return level;
+    }
+
+    public void kill() {
+        level.getEntities().remove(e);
     }
 }

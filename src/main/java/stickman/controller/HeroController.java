@@ -1,8 +1,9 @@
 package stickman.controller;
-import javafx.geometry.Point2D;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import stickman.model.*;
+
+import stickman.model.GameEngineImpl;
+import stickman.model.Hero;
+import stickman.model.Level;
+import stickman.model.LevelImpl;
 
 public class HeroController implements Controller {
     private Hero hero;
@@ -18,27 +19,11 @@ public class HeroController implements Controller {
     private boolean right;
     private boolean left;
     private boolean jump;
+    private String prevMove;
     private int time = GameEngineImpl.FPS;
 
     public HeroController(Hero hero) {
         this.hero = hero;
-    }
-
-    public void setLevel(LevelImpl level) {
-        this.level = level;
-    }
-
-    @Override
-    public Level getLevel() {
-        return level;
-    }
-
-    public void decrementLives() {
-        hero.decrementLives();
-    }
-
-    public int getRemainingLives() {
-        return hero.getRemainingLives();
     }
 
     @Override
@@ -52,7 +37,6 @@ public class HeroController implements Controller {
             hero.setDesiredY(hero.getDesiredY() - hero.getYVel());
             return true;
         } else if (jump) {
-            jump = true;
             hero.setYVel(yVel + jumpForce);
             hero.setDesiredY(hero.getDesiredY() - hero.getYVel());
             if (hero.getDesiredY() < beforeJumpY - hero.getJumpHeight()) {
@@ -60,15 +44,19 @@ public class HeroController implements Controller {
                 hero.setDesiredY(hero.getDesiredY() + hero.getYVel());
             }
         }
-
         return false;
     }
 
     @Override
     public boolean moveLeft() {
+        prevMove = "left";
         left = true;
 
         double xVel = hero.getXVel() / time;
+        if (xVel > 0) {
+            xVel *= -1;
+        }
+
         double horizontalMovement = hero.getHorizontalMovement() / time;
 
         hero.setXVel(xVel - horizontalMovement);
@@ -89,9 +77,13 @@ public class HeroController implements Controller {
 
     @Override
     public boolean moveRight() {
+        prevMove = "right";
         right = true;
 
         double xVel = hero.getXVel() / time;
+        if (xVel < 0) {
+            xVel *= -1;
+        }
         double horizontalMovement = hero.getHorizontalMovement() / time;
 
         hero.setXVel(xVel + horizontalMovement);
@@ -135,14 +127,7 @@ public class HeroController implements Controller {
         return true;
     }
 
-    public void setOnFloor(boolean value) {
-        onFloor = value;
-    }
-
-    public void setJump(boolean value) {
-        jump = value;
-    }
-
+    @Override
     public void move() {
         hero.setXPos(hero.getDesiredX());
         hero.setYPos(hero.getDesiredY());
@@ -174,6 +159,42 @@ public class HeroController implements Controller {
             hero.setDesiredY(level.getFloorHeight() - hero.getHeight());
             onFloor = true;
             jump = false;
+        }
+    }
+
+    @Override
+    public void setLevel(LevelImpl level) {
+        this.level = level;
+    }
+
+    @Override
+    public Level getLevel() {
+        return level;
+    }
+
+    public void setOnFloor(boolean value) {
+        onFloor = value;
+    }
+
+    public void setJump(boolean value) {
+        jump = value;
+    }
+
+    public void decrementLives() {
+        hero.decrementLives();
+    }
+
+    public int getRemainingLives() {
+        return hero.getRemainingLives();
+    }
+
+    public void platformMovement(String type) {
+        if (type.equals("icy")) {
+            if (prevMove.equals("right")) {
+                hero.setDesiredX(hero.getXPos() + hero.getXVel() + 0.1);
+            } else {
+                hero.setDesiredX(hero.getXPos() + hero.getXVel() - 0.1);
+            }
         }
     }
 }

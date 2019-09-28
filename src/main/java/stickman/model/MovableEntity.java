@@ -3,7 +3,7 @@ package stickman.model;
 import stickman.collision.CollisionStrategy;
 import stickman.controller.Controller;
 
-public abstract class MoveableEntity implements Entity {
+public abstract class MovableEntity implements Entity {
     private String imagePath;
     private double xPos;
     private double yPos;
@@ -12,7 +12,7 @@ public abstract class MoveableEntity implements Entity {
     private double desiredX;
     private double desiredY;
 
-    public MoveableEntity(double xPos, String imagePath) {
+    MovableEntity(double xPos, String imagePath) {
         this.xPos = xPos;
         this.imagePath = imagePath;
     }

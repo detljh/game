@@ -5,7 +5,7 @@ import stickman.collision.HeroCollisionStrategy;
 import stickman.controller.Controller;
 import stickman.controller.HeroController;
 
-public class Hero extends MoveableEntity {
+public class Hero extends MovableEntity {
     private String heroSize;
     private double jumpHeight;
     private HeroController hc;

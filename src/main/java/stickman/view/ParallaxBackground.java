@@ -67,8 +67,6 @@ public class ParallaxBackground implements BackgroundDrawer {
 
     @Override
     public void update(double xViewportOffset, double yViewportOffset) {
-
-
         for (int i = 0;i < 6; i++) {
             double rawHeight = images[i].getHeight();
             double rawWidth = images[i].getWidth() / 2; // images are all double stitched

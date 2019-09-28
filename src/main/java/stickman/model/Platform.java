@@ -4,11 +4,17 @@ public class Platform implements Entity {
     private double xPos;
     private double yPos;
     private String imagePath;
+    private String type;
 
-    Platform(double xPos, double yPos, String imagePath) {
+    Platform(double xPos, double yPos, String type, String imagePath) {
         this.xPos = xPos;
         this.yPos = yPos - getHeight();
         this.imagePath = imagePath;
+        this.type = type;
+    }
+
+    public String getType() {
+        return type;
     }
 
     @Override

@@ -8,7 +8,6 @@ import stickman.view.GameWindow;
 import java.util.Map;
 
 public class App extends Application {
-
     public static void main(String[] args) {
         launch(args);
     }
@@ -23,7 +22,8 @@ public class App extends Application {
                     " as your code will fail to compile on Java 10 and below.");
         }
 
-        GameEngine model = new GameEngineImpl("level1.json");
+        ReadConfiguration r = new ReadConfiguration("config.json");
+        GameEngine model = new GameEngineImpl(r.getConfig());
         GameWindow window = new GameWindow(model, 640, 400);
         window.run();
 

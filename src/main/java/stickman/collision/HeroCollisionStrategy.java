@@ -3,9 +3,11 @@ package stickman.collision;
 import javafx.geometry.Point2D;
 import stickman.controller.EnemyController;
 import stickman.controller.HeroController;
+import stickman.model.Enemy;
 import stickman.model.Entity;
 import stickman.model.Level;
-import stickman.model.MoveableEntity;
+import stickman.model.MovableEntity;
+import stickman.model.Platform;
 
 public class HeroCollisionStrategy extends CollisionStrategy {
     private HeroController hc;
@@ -17,7 +19,7 @@ public class HeroCollisionStrategy extends CollisionStrategy {
     }
 
     @Override
-    public boolean checkCollision(MoveableEntity a, Entity other) {
+    public boolean checkCollision(MovableEntity a, Entity other) {
         if (a.equals(other)) {
             return false;
         }
@@ -30,7 +32,7 @@ public class HeroCollisionStrategy extends CollisionStrategy {
     }
 
     @Override
-    public String handleCollision(MoveableEntity a, Entity other) {
+    public String handleCollision(MovableEntity a, Entity other) {
         if (other.equals(currentLevel.getFinish())) {
             return "won";
         } else if (other.getLayer().equals(Entity.Layer.BACKGROUND)) {
@@ -62,6 +64,7 @@ public class HeroCollisionStrategy extends CollisionStrategy {
                 hc.setOnFloor(true);
                 hc.setJump(false);
                 handleKill(other);
+                handlePlatformMovement(other);
             } else {
                 a.setDesiredY(other.getYPos() + other.getHeight());
                 a.setYVel(0);
@@ -78,7 +81,7 @@ public class HeroCollisionStrategy extends CollisionStrategy {
     @returns true if Hero has no more lives
      */
     private boolean handleDeath(Entity other) {
-        if (currentLevel.isEnemy(other)) {
+        if (other instanceof Enemy) {
             hc.decrementLives();
             if (hc.getRemainingLives() == 0) {
                 return true;
@@ -90,10 +93,16 @@ public class HeroCollisionStrategy extends CollisionStrategy {
     }
 
     private void handleKill(Entity other) {
-        if (currentLevel.isEnemy(other)) {
-            MoveableEntity e = (MoveableEntity) other;
+        if (other instanceof Enemy) {
+            MovableEntity e = (MovableEntity) other;
             EnemyController ec = (EnemyController) e.getController();
             ec.kill();
+        }
+    }
+
+    private void handlePlatformMovement(Entity other) {
+        if (other instanceof Platform) {
+            hc.platformMovement(((Platform) other).getType());
         }
     }
 }

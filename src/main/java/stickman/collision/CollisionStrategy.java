@@ -1,10 +1,10 @@
 package stickman.collision;
 
 import stickman.model.Entity;
-import stickman.model.MoveableEntity;
+import stickman.model.MovableEntity;
 
 public class CollisionStrategy {
-    public boolean checkCollision(MoveableEntity a, Entity other) {
+    public boolean checkCollision(MovableEntity a, Entity other) {
         if (a.equals(other)) {
             return false;
         }
@@ -19,11 +19,7 @@ public class CollisionStrategy {
                 ((a.getDesiredY() + a.getHeight()) > other.getYPos());
     }
 
-    public String handleCollision(MoveableEntity a, Entity other) {
+    public String handleCollision(MovableEntity a, Entity other) {
         return null;
-    }
-
-    private boolean handleDeath(Entity other) {
-        return false;
     }
 }

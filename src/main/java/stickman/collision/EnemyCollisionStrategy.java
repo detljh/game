@@ -2,22 +2,21 @@ package stickman.collision;
 
 import javafx.geometry.Point2D;
 import stickman.controller.EnemyController;
+import stickman.model.Enemy;
 import stickman.model.Entity;
 import stickman.model.Level;
-import stickman.model.MoveableEntity;
+import stickman.model.MovableEntity;
 
 public class EnemyCollisionStrategy extends CollisionStrategy {
-    private EnemyController ec;
     private Level currentLevel;
 
     public EnemyCollisionStrategy(EnemyController ec) {
-        this.ec = ec;
         currentLevel = ec.getLevel();
     }
 
     @Override
-    public String handleCollision(MoveableEntity a, Entity other) {
-        if (other.equals(currentLevel.getFinish()) || currentLevel.isEnemy(other) || other.equals(currentLevel.getHero())) {
+    public String handleCollision(MovableEntity a, Entity other) {
+        if (other.equals(currentLevel.getFinish()) || other instanceof Enemy || other.equals(currentLevel.getHero())) {
             return null;
         }
 

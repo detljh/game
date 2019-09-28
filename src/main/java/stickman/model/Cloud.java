@@ -4,16 +4,11 @@ import stickman.collision.CollisionStrategy;
 import stickman.controller.CloudController;
 import stickman.controller.Controller;
 
-public class Cloud extends MoveableEntity {
-    private double velocity;
-    private String imagePath;
-    private double xPos;
-    private double yPos;
+public class Cloud extends MovableEntity {
     private CloudController cc;
 
     Cloud(String imagePath, double xPos, double yPos, double velocity) {
         super(xPos, imagePath);
-        this.yPos = yPos;
         setXVel(velocity);
         setYPos(yPos);
     }

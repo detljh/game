@@ -5,21 +5,14 @@ import stickman.collision.EnemyCollisionStrategy;
 import stickman.controller.Controller;
 import stickman.controller.EnemyController;
 
-public class Enemy extends MoveableEntity {
-    private double xPos;
-    private double yPos;
-    private String imagePath;
+public class Enemy extends MovableEntity {
     private EnemyController ec;
     private String type;
-    private double xVel;
-    private double yVel;
-    private double desiredX;
-    private double desiredY;
 
     Enemy(double xPos, double yPos, String imagePath, String type) {
         super(xPos, imagePath);
         this.type = type;
-        this.yPos = yPos - getHeight();
+        setYPos(yPos - getHeight());
         setDesiredX(getXPos());
         setDesiredY(getYPos());
     }
@@ -63,5 +56,4 @@ public class Enemy extends MoveableEntity {
     public Controller getController() {
         return ec;
     }
-
 }

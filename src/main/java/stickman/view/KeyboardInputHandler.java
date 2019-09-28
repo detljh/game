@@ -5,8 +5,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import stickman.controller.HeroController;
-import stickman.model.GameEngine;
-import stickman.model.Hero;
 
 import java.net.URL;
 import java.util.HashMap;
@@ -19,7 +17,6 @@ class KeyboardInputHandler {
     private boolean left = false;
     private boolean right = false;
     private Set<KeyCode> pressedKeys = new HashSet<>();
-
     private Map<String, MediaPlayer> sounds = new HashMap<>();
 
     KeyboardInputHandler(HeroController hc) {
