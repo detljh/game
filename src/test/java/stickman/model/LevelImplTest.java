@@ -94,4 +94,16 @@ public class LevelImplTest {
     public void getHeroX() {
         assertEquals(20.0, level.getHeroX(), 0.001);
     }
+
+    @Test
+    public void invalidConfig() {
+        ReadConfiguration reader = new ReadConfiguration("testNoEnemyAndPlatform.json");
+        model = new GameEngineImpl(reader.getConfig());
+
+        reader = new ReadConfiguration("testDifferentSizedProperties.json");
+        model = new GameEngineImpl(reader.getConfig());
+
+        reader = new ReadConfiguration("testMissingProperty.json");
+        model = new GameEngineImpl(reader.getConfig());
+    }
 }

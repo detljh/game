@@ -11,11 +11,11 @@
     "size": "normal",
     "jumpHeight": 100.0
   },
-  "cloudVelocity": 3.2,
+  "cloudVelocity": -3.2,
   "_cloudVelocityComment": "Clouds should move the given number of pixels per second. This must be a positive double.",
   "enemy": {
     "_enemyTypeComment": "enemy states: [moving, still]",
-    "enemyType": ["moving", "still", "moving", "moving", "still"],
+    "enemyType": ["moving", "still", "moving", "moving"],
     "_positionComment": "x and y position in same index correspond with each other",
     "_xComment": "x position ideally > 50.0 away from stickman x position",
     "x": [70.0, 100.0, 400.0, 200.0, 400.0],
@@ -24,12 +24,12 @@
   "_platformComment": "x and y position in same index correspond with each other, y position is pixels from floor, platforms 20 pixel wide/high",
   "platform": {
     "platformType": ["normal", "icy", "normal", "normal", "icy", "normal", "icy", "icy"],
-    "x": [40.0, 60.0, 300.0, 100.0, 200.0, 300.0, 250.0, 330.0],
+    "x": [40.0, 60.0, 300.0, 100.0, 200.0, 300.0, 250.0],
     "y": [50.0, 50.0, 300.0, 110.0, 200.0, 0.0, 250.0, 360.0]
   },
   "finish": {
     "_yComment": "position from floor, if you want to place on platform, make it +20.0 the platform's y position",
     "x": 300.0,
-    "y": 320.0
+    "y": 0.0
   }
 }
