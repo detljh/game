@@ -31,6 +31,6 @@
   "finish": {
     "_yComment": "position from floor, if you want to place on platform, make it +20.0 the platform's y position",
     "x": 300.0,
-    "y": 320.0
+    "y": 0.0
   }
 }

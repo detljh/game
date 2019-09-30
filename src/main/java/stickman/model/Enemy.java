@@ -9,12 +9,13 @@ public class Enemy extends MovableEntity {
     private EnemyController ec;
     private String type;
 
-    Enemy(double xPos, double yPos, String imagePath, String type) {
+    public Enemy(double xPos, double yPos, String imagePath, String type) {
         super(xPos, imagePath);
         this.type = type;
         setYPos(yPos - getHeight());
         setDesiredX(getXPos());
         setDesiredY(getYPos());
+        ec = new EnemyController(this);
     }
 
     public String getType() {
@@ -45,11 +46,6 @@ public class Enemy extends MovableEntity {
     @Override
     public Layer getLayer() {
         return Layer.FOREGROUND;
-    }
-
-    @Override
-    public void setController(Controller c) {
-        ec = (EnemyController) c;
     }
 
     @Override

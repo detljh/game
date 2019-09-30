@@ -36,6 +36,7 @@ public class EntityViewImpl implements EntityView {
             node.setImage(new Image(imagePath));
         }
         node.setX(entity.getXPos() - xViewportOffset);
+        // add y offset as coordinates are origin from top left corner and positive moving down
         node.setY(entity.getYPos() + yViewportOffset);
         node.setFitHeight(entity.getHeight());
         node.setFitWidth(entity.getWidth());

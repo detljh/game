@@ -11,9 +11,9 @@ public class Hero extends MovableEntity {
     private HeroController hc;
     private double initialX;
     private double initialY;
-    private static int lives = 3;
+    private int lives = 3;
 
-    Hero(String imagePath, double xPos, String heroSize, double jumpHeight, double floorHeight) {
+    public Hero(String imagePath, double xPos, String heroSize, double jumpHeight, double floorHeight) {
         super(xPos, imagePath);
         setXPos(xPos);
         this.heroSize = heroSize;
@@ -25,6 +25,7 @@ public class Hero extends MovableEntity {
         setDesiredY(getYPos());
         initialX = xPos;
         initialY = floorHeight - getHeight();
+        hc = new HeroController(this);
     }
 
     public double getInitialX() {
@@ -39,6 +40,7 @@ public class Hero extends MovableEntity {
         return 150.0;
     }
 
+    /** Get x movement speed of hero */
     public double getHorizontalMovement() {
         return 80.0;
     }
@@ -77,11 +79,6 @@ public class Hero extends MovableEntity {
     @Override
     public Layer getLayer() {
         return Layer.FOREGROUND;
-    }
-
-    @Override
-    public void setController(Controller c) {
-        hc = (HeroController) c;
     }
 
     @Override

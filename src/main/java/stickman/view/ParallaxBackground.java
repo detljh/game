@@ -15,6 +15,7 @@ public class ParallaxBackground implements BackgroundDrawer {
     private Image[] images;
     private ImageView[] imageViews;
     private double[] parallaxEffect;
+    private Rectangle floor;
 
     @Override
     public void draw(GameEngine model, Pane pane) {
@@ -58,10 +59,9 @@ public class ParallaxBackground implements BackgroundDrawer {
             pane.getChildren().add(imageViews[i]);
         }
 
-        Rectangle floor = new Rectangle(0, floorHeight, width, height - floorHeight);
+        floor = new Rectangle(0, floorHeight, width, height - floorHeight);
         floor.setFill(Paint.valueOf("#1d2b38"));
         floor.setViewOrder(1000.0);
-
         pane.getChildren().add(floor);
     }
 
@@ -76,5 +76,7 @@ public class ParallaxBackground implements BackgroundDrawer {
             double translationY = (yViewportOffset * heightScale * parallaxEffect[i]) % rawHeight;
             imageViews[i].setViewport(new Rectangle2D(translationX, -translationY, rawWidth, rawHeight));
         }
+
+        floor.setTranslateY(yViewportOffset);
     }
 }

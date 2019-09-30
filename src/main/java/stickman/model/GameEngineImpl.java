@@ -11,6 +11,7 @@ public class GameEngineImpl implements GameEngine {
     public static final int FPS = (int) (1000 / 0.017) / 1000;
     private JSONObject configuration;
     private LevelImpl currentLevel;
+    // store state of game [won, lost], initially empty
     private String state = "";
     private int tick = 0;
 
@@ -49,6 +50,7 @@ public class GameEngineImpl implements GameEngine {
         return Math.max(currentLevel.getHero().getRemainingLives(), 0);
     }
 
+    /** Updates all movable entities with the force of gravity (towards floor) */
     @Override
     public void update() {
         double gravity = currentLevel.getGravity();
@@ -75,9 +77,10 @@ public class GameEngineImpl implements GameEngine {
         currentLevel.tick();
 
         HeroController hc = (HeroController) currentLevel.getHero().getController();
+        // set hero to not be on floor by default every tick to be updated by hero's movements
         hc.setOnFloor(false);
-
         for (MovableEntity a : currentLevel.getMovableEntities()) {
+            // call each entity's controller for their movements
             a.getController().tick();
             for (Entity other : currentLevel.getEntities()) {
                 CollisionStrategy strat = a.getCollisionStrategy();
@@ -90,10 +93,15 @@ public class GameEngineImpl implements GameEngine {
             }
         }
 
+        // remove entities that were added to the remove list
+        for (Entity a : currentLevel.getRemoveEntities()) {
+            currentLevel.getEntities().remove(a);
+        }
+        currentLevel.clearRemoveEntities();
+
+        // move all movable entities
         for (MovableEntity a : currentLevel.getMovableEntities()) {
-            if (a.getController() != null) {
-                a.getController().move();
-            }
+            a.getController().move();
         }
     }
 }

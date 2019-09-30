@@ -8,7 +8,7 @@ import stickman.model.LevelImpl;
 import java.util.Random;
 
 public class EnemyController implements Controller {
-    private String standFrame = "b";
+    private String standFrame = "a";
     // slow down tick to every 3/4 of a second
     private int tick = (int) (GameEngineImpl.FPS * 0.75);
     private int time = GameEngineImpl.FPS;
@@ -28,20 +28,17 @@ public class EnemyController implements Controller {
 
     @Override
     public boolean moveLeft() {
-        Random rand = new Random();
-        double xVel = 20 - (rand.nextDouble() * 70);
+        // make x velocity negative to move left
+        if (e.getXVel() > 0) {
+            e.setXVel(e.getXVel() * -1);
+        }
 
-        e.setXVel(xVel);
-        e.setDesiredX(e.getXPos() - (e.getXVel() / time));
+        e.setDesiredX(e.getXPos() + (e.getXVel() / time));
         return true;
     }
 
     @Override
     public boolean moveRight() {
-        Random rand = new Random();
-        double xVel = 20 - (rand.nextDouble() * 70);
-
-        e.setXVel(xVel);
         e.setDesiredX(e.getXPos() + (e.getXVel() / time));
         return true;
     }
@@ -52,20 +49,29 @@ public class EnemyController implements Controller {
         return true;
     }
 
+    /** Assigns a random integer to variable timeTillChange which decides the number of ticks till
+     * the enemy changes directions. Also sets the x velocity to a random double in range 5 - 40.
+     */
     private void chooseRandom() {
         Random rand = new Random();
         timeTillChange = rand.nextInt(time * 2) + 40;
+
+        double xVel = 5 + (rand.nextDouble() * (40 - 5));
+        e.setXVel(xVel);
     }
 
     @Override
     public void tick() {
         tick--;
         timeTillChange--;
+
+        // still enemies always stop moving
         if (e.getType().equals("still")) {
             stopMoving();
         } else {
             if (timeTillChange < 0) {
                 Random rand = new Random();
+                // random int from 0 - 2 to choose direction enemy will move
                 move = rand.nextInt(3);
                 chooseRandom();
             }
@@ -79,6 +85,7 @@ public class EnemyController implements Controller {
             }
         }
 
+        // makes sure enemy is not below floor
         if (level.getFloorHeight() - (e.getDesiredY() + e.getHeight()) < 0.001) {
             e.setYVel(0);
             e.setDesiredY(level.getFloorHeight() - e.getHeight());
@@ -115,7 +122,8 @@ public class EnemyController implements Controller {
         return level;
     }
 
+    /** Assigns the enemy to be removed from the entity list */
     public void kill() {
-        level.getEntities().remove(e);
+        level.addEntityToRemove(e);
     }
 }

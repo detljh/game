@@ -7,10 +7,17 @@ import stickman.controller.Controller;
 public class Cloud extends MovableEntity {
     private CloudController cc;
 
-    Cloud(String imagePath, double xPos, double yPos, double velocity) {
+    public Cloud(String imagePath, double xPos, double yPos, double velocity) {
         super(xPos, imagePath);
         setXVel(velocity);
         setYPos(yPos);
+        cc = new CloudController(this);
+    }
+
+    /** Override super class to enable negative x positions for spawning off screen */
+    @Override
+    public void setXPos(double xPos) {
+        super.xPos = xPos;
     }
 
     @Override
@@ -34,12 +41,9 @@ public class Cloud extends MovableEntity {
     }
 
     @Override
-    public void setController(Controller c) {
-        cc = (CloudController) c;
-    }
-
-    @Override
     public Controller getController() {
         return cc;
     }
+
+
 }

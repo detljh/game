@@ -6,7 +6,7 @@ public class Platform implements Entity {
     private String imagePath;
     private String type;
 
-    Platform(double xPos, double yPos, String type, String imagePath) {
+    public Platform(double xPos, double yPos, String type, String imagePath) {
         this.xPos = xPos;
         this.yPos = yPos - getHeight();
         this.imagePath = imagePath;

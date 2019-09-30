@@ -5,7 +5,7 @@ public class Finish implements Entity {
     private double yPos;
     private String imagePath;
 
-    Finish(double xPos, double yPos, String imagePath) {
+    public Finish(double xPos, double yPos, String imagePath) {
         this.xPos = xPos;
         this.yPos = yPos - getHeight();
         this.imagePath = imagePath;

@@ -5,10 +5,11 @@ import stickman.controller.Controller;
 
 public abstract class MovableEntity implements Entity {
     private String imagePath;
-    private double xPos;
+    double xPos;
     private double yPos;
     private double xVel;
     private double yVel;
+    // stores entity's desired position before it being set to prevent movements being backtracked by collisions
     private double desiredX;
     private double desiredY;
 
@@ -72,6 +73,7 @@ public abstract class MovableEntity implements Entity {
     }
 
     public void setXPos(double xPos) {
+        // prevent entities from moving off left side of screen
         if (xPos < 0) {
             xPos = 0;
         }
@@ -82,7 +84,6 @@ public abstract class MovableEntity implements Entity {
         this.yPos = yPos;
     }
 
-    abstract void setController(Controller c);
     public abstract Controller getController();
     public abstract CollisionStrategy getCollisionStrategy();
 }

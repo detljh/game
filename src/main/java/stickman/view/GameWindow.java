@@ -27,7 +27,6 @@ public class GameWindow {
     private Text time;
     private Text lives;
     private Timeline timeline;
-
     private double xViewportOffset = 0.0;
     private static double VIEWPORT_MARGIN_X;
     private double yViewportOffset = 0.0;
@@ -114,13 +113,12 @@ public class GameWindow {
             return;
         }
 
+        setTimer();
         setLives();
         if (model.getState().equals("won")) {
             setGameOverText("Congratulations!\n You have won!");
         } else if (model.getState().equals("lost")) {
             setGameOverText("Game Over!");
-        } else {
-            setTimer();
         }
 
         List<Entity> entities = model.getCurrentLevel().getEntities();

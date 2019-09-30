@@ -14,6 +14,13 @@ public class EnemyCollisionStrategy extends CollisionStrategy {
         currentLevel = ec.getLevel();
     }
 
+    /**
+     * Moves the enemy according to which side the @param other entity came from.
+     * Returns the status of the game if it has changed, otherwise null.
+     *
+     * @param a An entity that can move
+     * @param other An entity that may collide with @param a
+     */
     @Override
     public String handleCollision(MovableEntity a, Entity other) {
         if (other.equals(currentLevel.getFinish()) || other instanceof Enemy || other.equals(currentLevel.getHero())) {
@@ -26,26 +33,24 @@ public class EnemyCollisionStrategy extends CollisionStrategy {
         Point2D collisionVector = otherPos.subtract(aPos);
         collisionVector = collisionVector.normalize();
 
-        double width;
-        if (other.equals(currentLevel.getHero())) {
-            width = other.getWidth() / 2;
-        } else {
-            width = other.getWidth();
-        }
-
+        // if collision is on the x axis
         if (Math.abs(collisionVector.getX()) > Math.abs(collisionVector.getY())) {
+            // collision to the left
             if (collisionVector.getX() < 0) {
-                a.setDesiredX(other.getXPos() + width);
+                a.setDesiredX(other.getXPos() + other.getWidth());
                 a.setXVel(0);
             } else {
+                // collision to the right
                 a.setDesiredX(other.getXPos() - a.getWidth());
                 a.setXVel(0);
             }
         } else {
+            // collision on bottom
             if (collisionVector.getY() > 0) {
                 a.setDesiredY(other.getYPos() - a.getHeight());
                 a.setYVel(0);
             } else {
+                // collision on top
                 a.setDesiredY(other.getYPos() + other.getHeight());
                 a.setYVel(0);
             }

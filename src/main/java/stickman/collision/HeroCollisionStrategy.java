@@ -18,19 +18,33 @@ public class HeroCollisionStrategy extends CollisionStrategy {
         currentLevel = hc.getLevel();
     }
 
+    /**
+     * Checks if the hero collides with another entity.
+     *
+     * @param a An entity that can move
+     * @param other An entity that may collide with @param a
+     * @return True if there is a collision between different entities, false otherwise
+     */
     @Override
     public boolean checkCollision(MovableEntity a, Entity other) {
         if (a.equals(other)) {
             return false;
         }
 
-        // width of hero is half its height
+        // collision width of hero is half its height
         return (a.getDesiredX() < (other.getXPos() + other.getWidth())) &&
                 ((a.getDesiredX() + (a.getWidth() / 2)) > other.getXPos()) &&
                 (a.getDesiredY() < (other.getYPos() + other.getHeight())) &&
                 ((a.getDesiredY() + a.getHeight()) > other.getYPos());
     }
 
+    /**
+     * Performs the movements of the hero with respect to the collision object.
+     *
+     * @param a An entity that can move
+     * @param other An entity that may collide with @param a
+     * @return status of the game, null if no change
+     */
     @Override
     public String handleCollision(MovableEntity a, Entity other) {
         if (other.equals(currentLevel.getFinish())) {
@@ -44,20 +58,26 @@ public class HeroCollisionStrategy extends CollisionStrategy {
 
         Point2D collisionVector = otherPos.subtract(aPos);
         collisionVector = collisionVector.normalize();
+        // width of hero is half its height
         double width = a.getWidth() / 2;
 
+        // collision on x axis
         if (Math.abs(collisionVector.getX()) > Math.abs(collisionVector.getY())) {
+            // collision on the left
             if (collisionVector.getX() < 0) {
                 a.setDesiredX(other.getXPos() + other.getWidth());
                 a.setXVel(0);
             } else {
+                // collision on the right
                 a.setDesiredX(other.getXPos() - width);
                 a.setXVel(0);
             }
+
             if (handleDeath(other)) {
                 return "lost";
             }
         } else {
+            // collision on bottom
             if (collisionVector.getY() > 0) {
                 a.setDesiredY(other.getYPos() - a.getHeight());
                 a.setYVel(0);
@@ -66,6 +86,7 @@ public class HeroCollisionStrategy extends CollisionStrategy {
                 handleKill(other);
                 handlePlatformMovement(other);
             } else {
+                // collision on top
                 a.setDesiredY(other.getYPos() + other.getHeight());
                 a.setYVel(0);
                 hc.setJump(false);
@@ -77,8 +98,11 @@ public class HeroCollisionStrategy extends CollisionStrategy {
         return null;
     }
 
-    /*
-    @returns true if Hero has no more lives
+    /**
+     * Checks if the other entity was an enemy. If so, it deducts a life and moves the hero to starting position.
+     *
+     * @param other The other entity the hero collided with
+     * @return true if the hero has no more lives
      */
     private boolean handleDeath(Entity other) {
         if (other instanceof Enemy) {
@@ -92,6 +116,11 @@ public class HeroCollisionStrategy extends CollisionStrategy {
         return false;
     }
 
+    /**
+     * Checks if the other entity is an enemy. If so, it removes the enemy.
+     *
+     * @param other The other entity the hero collided with.
+     */
     private void handleKill(Entity other) {
         if (other instanceof Enemy) {
             MovableEntity e = (MovableEntity) other;
@@ -100,6 +129,11 @@ public class HeroCollisionStrategy extends CollisionStrategy {
         }
     }
 
+    /**
+     * Checks if the other entity is a platform. If so, it moves the hero according to the type of platform.
+     *
+     * @param other The other entity the hero collided with.
+     */
     private void handlePlatformMovement(Entity other) {
         if (other instanceof Platform) {
             hc.platformMovement(((Platform) other).getType());

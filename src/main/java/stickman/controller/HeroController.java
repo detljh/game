@@ -13,7 +13,6 @@ public class HeroController implements Controller {
     // slow down tick to every 3/4 of a second
     private int tick = (int) (GameEngineImpl.FPS * 0.75);
     private LevelImpl level;
-
     private double beforeJumpY;
     private boolean onFloor;
     private boolean right;
@@ -31,6 +30,7 @@ public class HeroController implements Controller {
         double jumpForce = hero.getJumpForce() / time;
         double yVel = hero.getYVel() / (time / 15);
         if (onFloor) {
+            // get initial y pos before the jump
             beforeJumpY = hero.getYPos();
             jump = true;
             hero.setYVel(yVel + jumpForce);
@@ -39,9 +39,9 @@ public class HeroController implements Controller {
         } else if (jump) {
             hero.setYVel(yVel + jumpForce);
             hero.setDesiredY(hero.getDesiredY() - hero.getYVel());
+            // continue rising until the max jump height is reached
             if (hero.getDesiredY() < beforeJumpY - hero.getJumpHeight()) {
                 jump = false;
-                hero.setDesiredY(hero.getDesiredY() + hero.getYVel());
             }
         }
         return false;
@@ -53,6 +53,7 @@ public class HeroController implements Controller {
         left = true;
 
         double xVel = hero.getXVel() / time;
+        // make x velocity negative to move left
         if (xVel > 0) {
             xVel *= -1;
         }
@@ -63,10 +64,10 @@ public class HeroController implements Controller {
         hero.setDesiredX(hero.getXPos() + hero.getXVel());
 
         // slow down animation
-        if (tick > (GameEngineImpl.FPS * 0.60)) {
+        if (tick > (time * 0.65)) {
             return true;
         }
-        tick = (int) (GameEngineImpl.FPS * 0.75);
+        tick = (int) (time * 0.75);
 
         // loop around walk frames facing left
         walkFrame = walkFrame % 4 + 5;
@@ -81,6 +82,7 @@ public class HeroController implements Controller {
         right = true;
 
         double xVel = hero.getXVel() / time;
+        // make x velocity positive to move right
         if (xVel < 0) {
             xVel *= -1;
         }
@@ -134,6 +136,7 @@ public class HeroController implements Controller {
     }
 
     public void restartHero() {
+        // set hero's position back to original starting position
         hero.setDesiredX(hero.getInitialX());
         hero.setDesiredY(hero.getInitialY());
     }
@@ -154,6 +157,7 @@ public class HeroController implements Controller {
             stopMoving();
         }
 
+        // make sure hero does not go beneath floor
         if (level.getFloorHeight() - (hero.getDesiredY() + hero.getHeight()) < 0.001) {
             hero.setYVel(0);
             hero.setDesiredY(level.getFloorHeight() - hero.getHeight());
@@ -191,9 +195,11 @@ public class HeroController implements Controller {
     public void platformMovement(String type) {
         if (type.equals("icy")) {
             if (prevMove.equals("right")) {
-                hero.setDesiredX(hero.getXPos() + hero.getXVel() + 0.1);
+                // if hero was previously moving right, continue sliding right
+                hero.setDesiredX(hero.getXPos() + hero.getXVel() + 0.2);
             } else {
-                hero.setDesiredX(hero.getXPos() + hero.getXVel() - 0.1);
+                // if hero was previously moving left, continue sliding left
+                hero.setDesiredX(hero.getXPos() + hero.getXVel() - 0.2);
             }
         }
     }
