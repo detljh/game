@@ -40,7 +40,7 @@ public class LevelImplTest {
             if (e instanceof SafeZone) {
                 SafeZone s = (SafeZone) e;
                 double size = hero.getHeight() * 1.2;
-                assertEquals(hero.getInitialX() - size / 3, s.getXPos(), 0.001);
+                assertEquals(hero.getInitialX() - size / 4, s.getXPos(), 0.001);
                 assertEquals(level.getFloorHeight() - s.getHeight(), s.getYPos(), 0.001);
                 assertEquals("safe_zone.png", s.getImagePath());
             }

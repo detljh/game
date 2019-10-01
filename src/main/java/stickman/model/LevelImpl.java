@@ -174,7 +174,7 @@ public class LevelImpl implements Level {
 
         private void addSafeZone() {
             double size = hero.getHeight() * 1.2;
-            SafeZone s = new SafeZone(hero.getInitialX() - size / 3,
+            SafeZone s = new SafeZone(hero.getInitialX() - size / 4,
                     hero.getInitialY() + hero.getHeight(), size,
                     size, "safe_zone.png");
             entities.add(s);
