@@ -23,7 +23,7 @@ public class EnemyCollisionStrategy extends CollisionStrategy {
      */
     @Override
     public String handleCollision(MovableEntity a, Entity other) {
-        if (other.equals(currentLevel.getFinish()) || other instanceof Enemy || other.equals(currentLevel.getHero())) {
+        if (other instanceof Enemy || other.equals(currentLevel.getHero())) {
             return null;
         }
 

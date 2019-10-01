@@ -9,6 +9,6 @@ public interface Entity {
     Layer getLayer();
 
     enum Layer {
-        BACKGROUND, FOREGROUND, EFFECT
+        BACKGROUND, COLLIDER, FINISH, FOREGROUND, EFFECT
     }
 }

@@ -35,6 +35,16 @@ public class LevelImplTest {
         Hero hero = level.getHero();
         assertEquals(20.0, hero.getXPos(), 0.001);
         assertEquals(level.getFloorHeight() - hero.getHeight(), hero.getYPos(), 0.001);
+
+        for (Entity e : level.getEntities()) {
+            if (e instanceof SafeZone) {
+                SafeZone s = (SafeZone) e;
+                double size = hero.getHeight() * 1.2;
+                assertEquals(hero.getInitialX() - size / 3, s.getXPos(), 0.001);
+                assertEquals(level.getFloorHeight() - s.getHeight(), s.getYPos(), 0.001);
+                assertEquals("safe_zone.png", s.getImagePath());
+            }
+        }
     }
 
     @Test
@@ -46,7 +56,7 @@ public class LevelImplTest {
 
     @Test
     public void getEntities() {
-        assertEquals(15 + (int) (level.getWidth() / 40), level.getEntities().size());
+        assertEquals(16 + (int) (level.getWidth() / 40), level.getEntities().size());
     }
 
     @Test

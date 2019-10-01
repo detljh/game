@@ -55,8 +55,7 @@ public class GameEngineImpl implements GameEngine {
     public void update() {
         double gravity = currentLevel.getGravity();
         List<MovableEntity> moveableEntities = currentLevel.getMovableEntities();
-        for (int i = 0; i < moveableEntities.size(); i++) {
-            MovableEntity entity = moveableEntities.get(i);
+        for (MovableEntity entity : moveableEntities) {
             entity.setYVel(entity.getYVel() + gravity);
             double yVel = entity.getYVel() / (FPS / 15);
             entity.setDesiredY(entity.getYPos() + yVel);

@@ -31,6 +31,10 @@ public class HeroCollisionStrategy extends CollisionStrategy {
             return false;
         }
 
+        if (other.getLayer().equals(Entity.Layer.BACKGROUND) || other.getLayer().equals(Entity.Layer.COLLIDER)) {
+            return false;
+        }
+
         // collision width of hero is half its height
         return (a.getDesiredX() < (other.getXPos() + other.getWidth())) &&
                 ((a.getDesiredX() + (a.getWidth() / 2)) > other.getXPos()) &&
@@ -47,10 +51,8 @@ public class HeroCollisionStrategy extends CollisionStrategy {
      */
     @Override
     public String handleCollision(MovableEntity a, Entity other) {
-        if (other.equals(currentLevel.getFinish())) {
+        if (other.getLayer().equals(Entity.Layer.FINISH)) {
             return "won";
-        } else if (other.getLayer().equals(Entity.Layer.BACKGROUND)) {
-            return null;
         }
 
         Point2D aPos = new Point2D(a.getDesiredX(), a.getDesiredY());

@@ -1,11 +1,15 @@
 package stickman.model;
 
-public class Finish implements Entity {
+public class SafeZone implements Entity {
     private double xPos;
     private double yPos;
+    private double height;
+    private double width;
     private String imagePath;
 
-    public Finish(double xPos, double yPos, String imagePath) {
+    SafeZone(double xPos, double yPos, double height, double width, String imagePath) {
+        this.height = height;
+        this.width = width;
         this.xPos = xPos;
         this.yPos = yPos - getHeight();
         this.imagePath = imagePath;
@@ -28,16 +32,16 @@ public class Finish implements Entity {
 
     @Override
     public double getHeight() {
-        return 40.0;
+        return height;
     }
 
     @Override
     public double getWidth() {
-        return 40.0;
+        return width;
     }
 
     @Override
     public Layer getLayer() {
-        return Layer.FINISH;
+        return Layer.COLLIDER;
     }
 }

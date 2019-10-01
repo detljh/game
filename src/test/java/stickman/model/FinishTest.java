@@ -3,7 +3,7 @@ package stickman.model;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class FinishTest {
     private static Finish finish;
@@ -40,6 +40,6 @@ public class FinishTest {
 
     @Test
     public void getLayer() {
-        assertEquals(Entity.Layer.BACKGROUND, finish.getLayer());
+        assertEquals(Entity.Layer.FINISH, finish.getLayer());
     }
 }

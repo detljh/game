@@ -67,10 +67,6 @@ public class LevelImpl implements Level {
         movableEntities.add(c);
     }
 
-    public Finish getFinish() {
-        return finish;
-    }
-
     double getGravity() {
         return gravity;
     }
@@ -78,6 +74,11 @@ public class LevelImpl implements Level {
     @Override
     public Hero getHero() {
         return hero;
+    }
+
+    @Override
+    public Finish getFinish() {
+        return finish;
     }
 
     List<MovableEntity> getMovableEntities() {
@@ -167,7 +168,16 @@ public class LevelImpl implements Level {
             entities.add(hero);
             movableEntities.add(hero);
             this.hero = hero;
+            addSafeZone();
             return this;
+        }
+
+        private void addSafeZone() {
+            double size = hero.getHeight() * 1.2;
+            SafeZone s = new SafeZone(hero.getInitialX() - size / 3,
+                    hero.getInitialY() + hero.getHeight(), size,
+                    size, "safe_zone.png");
+            entities.add(s);
         }
 
         LevelBuilder addEnemy(JSONObject enemies) {

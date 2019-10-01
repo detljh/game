@@ -17,7 +17,7 @@ public class CollisionStrategy {
             return false;
         }
 
-        if (other.getLayer().equals(Entity.Layer.BACKGROUND)) {
+        if (other.getLayer().equals(Entity.Layer.BACKGROUND) || other.getLayer().equals(Entity.Layer.FINISH)) {
             return false;
         }
 

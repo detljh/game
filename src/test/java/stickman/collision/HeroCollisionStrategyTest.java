@@ -22,7 +22,7 @@ public class HeroCollisionStrategyTest {
         ReadConfiguration reader = new ReadConfiguration("test.json");
         model = new GameEngineImpl(reader.getConfig());
         level = (LevelImpl) model.getCurrentLevel();
-        hero = createHero(40.0);
+        hero = createHero(60.0);
         hc = (HeroController) hero.getController();
         hc.setLevel(level);
         strategy = (HeroCollisionStrategy) hero.getCollisionStrategy();
@@ -38,49 +38,49 @@ public class HeroCollisionStrategyTest {
 
     @Test
     public void checkCollision() {
+        assertFalse(strategy.checkCollision(hero, new Cloud("cloud_1.png", 0.0, 0.0, 3.2)));
         assertFalse(strategy.checkCollision(hero, hero));
-        assertTrue(strategy.checkCollision(hero, createHero(50.0)));
-        assertFalse(strategy.checkCollision(hero, createHero(55.0)));
-        assertTrue(strategy.checkCollision(hero, createHero(54.0)));
-        assertFalse(strategy.checkCollision(hero, createHero(100.0)));
+        assertTrue(strategy.checkCollision(hero, createHero(70.0)));
+        assertFalse(strategy.checkCollision(hero, createHero(75.0)));
+        assertTrue(strategy.checkCollision(hero, createHero(74.0)));
+        assertFalse(strategy.checkCollision(hero, createHero(120.0)));
 
         hero.setDesiredY(299);
-        assertTrue(strategy.checkCollision(hero, createHero(40.0)));
+        assertTrue(strategy.checkCollision(hero, createHero(60.0)));
         hero.setDesiredY(241);
-        assertTrue(strategy.checkCollision(hero, createHero(40.0)));
-        hero.setDesiredX(70.0);
-        assertFalse(strategy.checkCollision(hero, createHero(40.0)));
-        hero.setDesiredX(10.0);
-        assertFalse(strategy.checkCollision(hero, createHero(40.0)));
+        assertTrue(strategy.checkCollision(hero, createHero(60.0)));
+        hero.setDesiredX(90.0);
+        assertFalse(strategy.checkCollision(hero, createHero(60.0)));
+        hero.setDesiredX(30.0);
+        assertFalse(strategy.checkCollision(hero, createHero(60.0)));
     }
 
     @Test
     public void handleCollision() {
         assertEquals("won", strategy.handleCollision(hero, level.getFinish()));
-        assertNull(strategy.handleCollision(hero, new Cloud("cloud_1.png", 0.0, 0.0, 3.2)));
 
         double width = hero.getWidth() / 2;
 
         // to make platform on same yPos as hero, make +20
-        Platform platform = new Platform(30.0, hero.getYPos() + 20, "normal", "foot_tile.png");
+        Platform platform = new Platform(50.0, hero.getYPos() + 20, "normal", "foot_tile.png");
         assertTrue(strategy.checkCollision(hero, platform));
         strategy.handleCollision(hero, platform);
         assertEquals(0.0, hero.getXVel(), 0.001);
         assertEquals(platform.getXPos() + platform.getWidth(), hero.getDesiredX(), 0.001);
 
-        platform = new Platform(60.0, hero.getYPos() + 20, "normal", "foot_tile.png");
+        platform = new Platform(80.0, hero.getYPos() + 20, "normal", "foot_tile.png");
         assertTrue(strategy.checkCollision(hero, platform));
         strategy.handleCollision(hero, platform);
         assertEquals(0.0, hero.getXVel(), 0.001);
         assertEquals(platform.getXPos() - width, hero.getDesiredX(), 0.001);
 
-        platform = new Platform(40.0, hero.getYPos() + 20 + 15, "normal", "foot_tile.png");
+        platform = new Platform(60.0, hero.getYPos() + 20 + 15, "normal", "foot_tile.png");
         assertTrue(strategy.checkCollision(hero, platform));
         strategy.handleCollision(hero, platform);
         assertEquals(0.0, hero.getYVel(), 0.001);
         assertEquals(platform.getYPos() - hero.getHeight(), hero.getDesiredY(), 0.001);
 
-        platform = new Platform(40.0, hero.getYPos() + 20 - 25, "normal", "foot_tile.png");
+        platform = new Platform(60.0, hero.getYPos() + 20 - 25, "normal", "foot_tile.png");
         assertTrue(strategy.checkCollision(hero, platform));
         strategy.handleCollision(hero, platform);
         assertEquals(0.0, hero.getYVel(), 0.001);
