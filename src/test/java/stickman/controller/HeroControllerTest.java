@@ -108,36 +108,36 @@ public class HeroControllerTest {
 
     @Test
     public void tick() {
-        int tick = (int) (GameEngineImpl.FPS * 0.75);
+        int tick = GameEngineImpl.FPS;
         level.getHero().getController().moveLeft();
-        while (tick > (GameEngineImpl.FPS * 0.65)) {
+        while (tick > (GameEngineImpl.FPS * 0.9)) {
             tick--;
             assertEquals("ch_stand1.png", level.getHero().getImagePath());
             level.getHero().getController().tick();
         }
         assertEquals("ch_walk5.png", level.getHero().getImagePath());
 
-        tick = (int) (GameEngineImpl.FPS * 0.75);
+        tick = GameEngineImpl.FPS;
         level.getHero().getController().stopMoving();
-        while (tick > 0) {
+        while (tick > GameEngineImpl.FPS * 0.8) {
             tick--;
             assertEquals("ch_walk5.png", level.getHero().getImagePath());
             level.getHero().getController().tick();
         }
         assertEquals("ch_stand4.png", level.getHero().getImagePath());
 
-        tick = (int) (GameEngineImpl.FPS * 0.75);
+        tick = GameEngineImpl.FPS;
         level.getHero().getController().moveRight();
-        while (tick > (GameEngineImpl.FPS * 0.65)) {
+        while (tick > (GameEngineImpl.FPS * 0.9)) {
             tick--;
             assertEquals("ch_stand4.png", level.getHero().getImagePath());
             level.getHero().getController().tick();
         }
         assertEquals("ch_walk2.png", level.getHero().getImagePath());
 
-        tick = (int) (GameEngineImpl.FPS * 0.75);
+        tick = GameEngineImpl.FPS;
         level.getHero().getController().stopMoving();
-        while (tick > 0) {
+        while (tick > GameEngineImpl.FPS * 0.8) {
             tick--;
             assertEquals("ch_walk2.png", level.getHero().getImagePath());
             level.getHero().getController().tick();

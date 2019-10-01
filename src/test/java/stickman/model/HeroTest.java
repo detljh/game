@@ -31,12 +31,12 @@ public class HeroTest {
 
     @Test
     public void getJumpForce() {
-        assertEquals(150.0, hero.getJumpForce(), 0.001);
+        assertEquals(hero.getJumpHeight() / 2, hero.getJumpForce(), 0.001);
     }
 
     @Test
     public void getHorizontalMovement() {
-        assertEquals(80.0, hero.getHorizontalMovement(), 0.001);
+        assertEquals(150.0, hero.getHorizontalMovement(), 0.001);
     }
 
     @Test

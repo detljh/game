@@ -25,7 +25,6 @@ public class App extends Application {
         ReadConfiguration r = new ReadConfiguration("config.json");
         GameEngine model = new GameEngineImpl(r.getConfig());
         GameWindow window = new GameWindow(model, 640, 400);
-        window.run();
 
         primaryStage.setTitle("Stickman");
         primaryStage.setScene(window.getScene());

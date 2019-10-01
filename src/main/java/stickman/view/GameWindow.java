@@ -109,10 +109,6 @@ public class GameWindow {
             return;
         }
 
-        if (timeline.getStatus().equals(Animation.Status.STOPPED)) {
-            return;
-        }
-
         setTimer();
         setLives();
         if (model.getState().equals("won")) {

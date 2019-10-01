@@ -130,7 +130,6 @@ public class HeroCollisionStrategyTest {
                 hero.setDesiredY(e.getYPos() - hero.getHeight() + 1);
                 assertTrue(strategy.checkCollision(hero, e));
                 assertNull(strategy.handleCollision(hero, e));
-                assertEquals(1, level.getRemoveEntities().size());
                 break;
             }
         }

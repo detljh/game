@@ -37,21 +37,16 @@ public class Hero extends MovableEntity {
     }
 
     public double getJumpForce() {
-        return 150.0;
+        return jumpHeight / 2;
     }
 
     /** Get x movement speed of hero */
     public double getHorizontalMovement() {
-        return 80.0;
+        return 150.0;
     }
 
     public double getJumpHeight() {
         return jumpHeight;
-    }
-
-    @Override
-    public CollisionStrategy getCollisionStrategy() {
-        return new HeroCollisionStrategy(hc);
     }
 
     @Override
@@ -84,6 +79,11 @@ public class Hero extends MovableEntity {
     @Override
     public Controller getController() {
         return hc;
+    }
+
+    @Override
+    public CollisionStrategy getCollisionStrategy() {
+        return new HeroCollisionStrategy(hc);
     }
 
     public void decrementLives() {

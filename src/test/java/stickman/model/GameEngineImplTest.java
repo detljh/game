@@ -45,7 +45,7 @@ public class GameEngineImplTest {
         List<Double> velocities = new ArrayList<>();
         List<Double> y = new ArrayList<>();
         for (int i = 0; i < moveableEntities.size(); i++) {
-            velocities.add((moveableEntities.get(i).getYVel() + gravity) / (GameEngineImpl.FPS / 15));
+            velocities.add((moveableEntities.get(i).getYVel() + gravity) / GameEngineImpl.FPS);
             y.add(moveableEntities.get(i).getYPos());
         }
 

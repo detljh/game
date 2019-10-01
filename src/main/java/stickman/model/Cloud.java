@@ -36,14 +36,12 @@ public class Cloud extends MovableEntity {
     }
 
     @Override
-    public CollisionStrategy getCollisionStrategy() {
-        return new CollisionStrategy();
-    }
-
-    @Override
     public Controller getController() {
         return cc;
     }
 
-
+    @Override
+    public CollisionStrategy getCollisionStrategy() {
+        return new CollisionStrategy();
+    }
 }

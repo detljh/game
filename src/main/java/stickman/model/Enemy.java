@@ -23,11 +23,6 @@ public class Enemy extends MovableEntity {
     }
 
     @Override
-    public CollisionStrategy getCollisionStrategy() {
-        return new EnemyCollisionStrategy(ec);
-    }
-
-    @Override
     public double getHeight() {
         if ("still".equals(type)) {
             return 40.0;
@@ -51,5 +46,10 @@ public class Enemy extends MovableEntity {
     @Override
     public Controller getController() {
         return ec;
+    }
+
+    @Override
+    public CollisionStrategy getCollisionStrategy() {
+        return new EnemyCollisionStrategy(ec);
     }
 }

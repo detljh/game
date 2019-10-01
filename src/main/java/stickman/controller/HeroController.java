@@ -10,8 +10,7 @@ public class HeroController implements Controller {
     // keep track of imagepath frame for animation
     private int walkFrame = 0;
     private int standFrame = 0;
-    // slow down tick to every 3/4 of a second
-    private int tick = (int) (GameEngineImpl.FPS * 0.75);
+    private int tick = GameEngineImpl.FPS;
     private LevelImpl level;
     private double beforeJumpY;
     private boolean onFloor;
@@ -64,10 +63,10 @@ public class HeroController implements Controller {
         hero.setDesiredX(hero.getXPos() + hero.getXVel());
 
         // slow down animation
-        if (tick > (time * 0.65)) {
+        if (tick > (time * 0.9)) {
             return true;
         }
-        tick = (int) (time * 0.75);
+        tick = GameEngineImpl.FPS;
 
         // loop around walk frames facing left
         walkFrame = walkFrame % 4 + 5;
@@ -92,10 +91,10 @@ public class HeroController implements Controller {
         hero.setDesiredX(hero.getXPos() + hero.getXVel());
 
         // slow down animation
-        if (tick > (time * 0.65)) {
+        if (tick > (time * 0.9)) {
             return true;
         }
-        tick = (int) (time * 0.75);
+        tick = GameEngineImpl.FPS;
 
         // loop around walk frames going right
         walkFrame = walkFrame % 4 + 1;
@@ -111,10 +110,10 @@ public class HeroController implements Controller {
         hero.setXVel(0);
 
         // slow down animation
-        if (tick > 0) {
+        if (tick > (GameEngineImpl.FPS * 0.8)) {
             return true;
         }
-        tick = (int) (time * 0.75);
+        tick = GameEngineImpl.FPS;
 
         // update stand frame based on direction hero was previously walking in
         if (walkFrame <= 4) {

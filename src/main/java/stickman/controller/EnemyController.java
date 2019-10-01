@@ -8,9 +8,8 @@ import stickman.model.LevelImpl;
 import java.util.Random;
 
 public class EnemyController implements Controller {
-    private String standFrame = "a";
-    // slow down tick to every 3/4 of a second
-    private int tick = (int) (GameEngineImpl.FPS * 0.75);
+    private String standFrame;
+    private int tick = GameEngineImpl.FPS;
     private int time = GameEngineImpl.FPS;
     private LevelImpl level;
     private Enemy e;
@@ -19,6 +18,7 @@ public class EnemyController implements Controller {
 
     public EnemyController(Enemy e) {
         this.e = e;
+        standFrame = e.getImagePath().substring(6, 7);
     }
 
     @Override
@@ -50,13 +50,13 @@ public class EnemyController implements Controller {
     }
 
     /** Assigns a random integer to variable timeTillChange which decides the number of ticks till
-     * the enemy changes directions. Also sets the x velocity to a random double in range 5 - 40.
+     * the enemy changes directions. Also sets the x velocity to a random double in range 20 - 70.
      */
     private void chooseRandom() {
         Random rand = new Random();
         timeTillChange = rand.nextInt(time * 2) + 40;
 
-        double xVel = 5 + (rand.nextDouble() * (40 - 5));
+        double xVel = 20 + (rand.nextDouble() * (70 - 20));
         e.setXVel(xVel);
     }
 
@@ -92,10 +92,10 @@ public class EnemyController implements Controller {
         }
 
         // slow down animation
-        if (tick > 0) {
+        if (tick > time * 0.5) {
             return;
         }
-        tick = (int) (time * 0.75);
+        tick = time;
 
         if (standFrame.equals("a")) {
             standFrame = "b";

@@ -27,7 +27,7 @@ public class LevelImplTest {
 
     @Test
     public void getGravity() {
-        assertEquals(9.8 / GameEngineImpl.FPS, level.getGravity(), 0.001);
+        assertEquals(9.8, level.getGravity(), 0.001);
     }
 
     @Test

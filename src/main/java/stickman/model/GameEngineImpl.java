@@ -57,7 +57,7 @@ public class GameEngineImpl implements GameEngine {
         List<MovableEntity> moveableEntities = currentLevel.getMovableEntities();
         for (MovableEntity entity : moveableEntities) {
             entity.setYVel(entity.getYVel() + gravity);
-            double yVel = entity.getYVel() / (FPS / 15);
+            double yVel = entity.getYVel() / FPS;
             entity.setDesiredY(entity.getYPos() + yVel);
         }
     }
@@ -93,9 +93,6 @@ public class GameEngineImpl implements GameEngine {
         }
 
         // remove entities that were added to the remove list
-        for (Entity a : currentLevel.getRemoveEntities()) {
-            currentLevel.getEntities().remove(a);
-        }
         currentLevel.clearRemoveEntities();
 
         // move all movable entities

@@ -10,7 +10,7 @@ import stickman.model.LevelImpl;
 import static org.junit.Assert.*;
 
 public class EnemyControllerTest {
-    private static Enemy enemy;
+    private Enemy enemy;
     private GameEngineImpl model;
     private LevelImpl level;
 
@@ -55,8 +55,8 @@ public class EnemyControllerTest {
 
     @Test
     public void tick() {
-        int tick = (int) (GameEngineImpl.FPS * 0.75);
-        while (tick > 0) {
+        int tick = GameEngineImpl.FPS;
+        while (tick > GameEngineImpl.FPS * 0.5) {
             tick--;
             assertEquals("slimeBa.png", enemy.getImagePath());
             enemy.getController().tick();
@@ -64,8 +64,8 @@ public class EnemyControllerTest {
 
         assertEquals("slimeBb.png", enemy.getImagePath());
 
-        tick = (int) (GameEngineImpl.FPS * 0.75);
-        while (tick > 0) {
+        tick = GameEngineImpl.FPS;
+        while (tick > GameEngineImpl.FPS * 0.5) {
             tick--;
             assertEquals("slimeBb.png", enemy.getImagePath());
             enemy.getController().tick();

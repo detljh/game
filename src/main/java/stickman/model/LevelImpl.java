@@ -45,11 +45,10 @@ public class LevelImpl implements Level {
         removeEntities.add(e);
     }
 
-    public List<Entity> getRemoveEntities() {
-        return removeEntities;
-    }
-
     void clearRemoveEntities() {
+        for (Entity e : removeEntities) {
+            entities.remove(e);
+        }
         removeEntities = new ArrayList<>();
     }
 
@@ -142,7 +141,7 @@ public class LevelImpl implements Level {
         LevelBuilder() {
             entities = new ArrayList<>();
             movableEntities = new ArrayList<>();
-            gravity = 9.8 / GameEngineImpl.FPS;
+            gravity = 9.8;
         }
 
         LevelBuilder setWidth(double width) {
@@ -196,14 +195,16 @@ public class LevelImpl implements Level {
             // randomise initial stance of enemy
             Random rand = new Random();
             String[] enemyImage = {"B", "G", "P", "R", "Y"};
-            String enemyStance;
-            if (rand.nextInt(2) == 0) {
-                enemyStance = "a";
-            } else {
-                enemyStance = "b";
-            }
 
             for (int i = 0; i < type.size(); i++) {
+                String enemyStance;
+                int randomStance = rand.nextInt(2);
+                if (randomStance == 0) {
+                    enemyStance = "a";
+                } else {
+                    enemyStance = "b";
+                }
+
                 int enemyType;
                 if (type.get(i).equals("still")) {
                     // still enemies are yellow
