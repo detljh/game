@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="stickman.collision.CollisionStrategyTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2019-10-02T11:50:20" hostname="LAPTOP-9KGUS48K" time="0.034">
+<testsuite name="stickman.collision.CollisionStrategyTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2019-10-02T14:47:10" hostname="LAPTOP-9KGUS48K" time="0.035">
   <properties/>
-  <testcase name="handleCollision" classname="stickman.collision.CollisionStrategyTest" time="0.027"/>
-  <testcase name="checkCollision" classname="stickman.collision.CollisionStrategyTest" time="0.007"/>
+  <testcase name="handleCollision" classname="stickman.collision.CollisionStrategyTest" time="0.019"/>
+  <testcase name="checkCollision" classname="stickman.collision.CollisionStrategyTest" time="0.013"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

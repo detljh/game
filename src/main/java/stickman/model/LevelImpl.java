@@ -28,7 +28,6 @@ public class LevelImpl implements Level {
         this.width = builder.width;
         this.floorHeight = builder.floorHeight;
         this.hero = builder.hero;
-        hero.getController().setLevel(this);
         this.cloudVelocity = builder.cloudVelocity;
         this.finish = builder.finish;
         this.movableEntities = builder.movableEntities;

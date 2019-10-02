@@ -72,7 +72,6 @@ public class GameEngineImpl implements GameEngine {
     public void tick() {
         tick++;
         update();
-        // call level's tick method to move clouds
         currentLevel.tick();
 
         HeroController hc = (HeroController) currentLevel.getHero().getController();

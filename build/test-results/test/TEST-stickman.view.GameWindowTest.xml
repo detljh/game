@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="stickman.view.GameWindowTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2019-10-02T11:50:22" hostname="LAPTOP-9KGUS48K" time="2.116">
+<testsuite name="stickman.view.GameWindowTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2019-10-02T14:47:18" hostname="LAPTOP-9KGUS48K" time="3.711">
   <properties/>
-  <testcase name="getScene" classname="stickman.view.GameWindowTest" time="2.116"/>
+  <testcase name="getScene" classname="stickman.view.GameWindowTest" time="3.711"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

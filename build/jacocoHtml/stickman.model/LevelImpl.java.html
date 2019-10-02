@@ -28,102 +28,101 @@ public class LevelImpl implements Level {
 <span class="fc" id="L28">        this.width = builder.width;</span>
 <span class="fc" id="L29">        this.floorHeight = builder.floorHeight;</span>
 <span class="fc" id="L30">        this.hero = builder.hero;</span>
-<span class="fc" id="L31">        hero.getController().setLevel(this);</span>
-<span class="fc" id="L32">        this.cloudVelocity = builder.cloudVelocity;</span>
-<span class="fc" id="L33">        this.finish = builder.finish;</span>
-<span class="fc" id="L34">        this.movableEntities = builder.movableEntities;</span>
-<span class="fc" id="L35">        tick = (int) ((width * 4 / 5) / (cloudVelocity / GameEngineImpl.FPS));</span>
-<span class="fc" id="L36">        removeEntities = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L31">        this.cloudVelocity = builder.cloudVelocity;</span>
+<span class="fc" id="L32">        this.finish = builder.finish;</span>
+<span class="fc" id="L33">        this.movableEntities = builder.movableEntities;</span>
+<span class="fc" id="L34">        tick = (int) ((width * 4 / 5) / (cloudVelocity / GameEngineImpl.FPS));</span>
+<span class="fc" id="L35">        removeEntities = new ArrayList&lt;&gt;();</span>
 
         // set the level context for all controllers
-<span class="fc bfc" id="L39" title="All 2 branches covered.">        for (MovableEntity movableEntity : movableEntities) {</span>
-<span class="fc" id="L40">            movableEntity.getController().setLevel(this);</span>
-<span class="fc" id="L41">        }</span>
-<span class="fc" id="L42">    }</span>
+<span class="fc bfc" id="L38" title="All 2 branches covered.">        for (MovableEntity movableEntity : movableEntities) {</span>
+<span class="fc" id="L39">            movableEntity.getController().setLevel(this);</span>
+<span class="fc" id="L40">        }</span>
+<span class="fc" id="L41">    }</span>
 
     public void addEntityToRemove(Entity e) {
-<span class="fc" id="L45">        removeEntities.add(e);</span>
-<span class="fc" id="L46">    }</span>
+<span class="fc" id="L44">        removeEntities.add(e);</span>
+<span class="fc" id="L45">    }</span>
 
     void clearRemoveEntities() {
-<span class="fc bfc" id="L49" title="All 2 branches covered.">        for (Entity e : removeEntities) {</span>
-<span class="fc" id="L50">            entities.remove(e);</span>
-<span class="fc" id="L51">        }</span>
-<span class="fc" id="L52">        removeEntities = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L53">    }</span>
+<span class="fc bfc" id="L48" title="All 2 branches covered.">        for (Entity e : removeEntities) {</span>
+<span class="fc" id="L49">            entities.remove(e);</span>
+<span class="fc" id="L50">        }</span>
+<span class="fc" id="L51">        removeEntities = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L52">    }</span>
 
     private void addCloud(double velocity) {
-<span class="fc" id="L56">        Random rand = new Random();</span>
+<span class="fc" id="L55">        Random rand = new Random();</span>
         // randomize cloud image used
-<span class="fc" id="L58">        int cloudType = rand.nextInt(2) + 1;</span>
+<span class="fc" id="L57">        int cloudType = rand.nextInt(2) + 1;</span>
         // spawn them off screen so they move in screen from left of screen
-<span class="fc" id="L60">        double xPos = -width + (rand.nextDouble() * (-width / 2));</span>
+<span class="fc" id="L59">        double xPos = -width + (rand.nextDouble() * (-width / 2));</span>
         // randomise y position of cloud
-<span class="fc" id="L62">        double yPos = rand.nextDouble() * (getHeight() / 4.5);</span>
-<span class="fc" id="L63">        String path = &quot;cloud_&quot; + cloudType + &quot;.png&quot;;</span>
-<span class="fc" id="L64">        Cloud c = new Cloud(path, xPos, yPos, velocity);</span>
-<span class="fc" id="L65">        entities.add(c);</span>
-<span class="fc" id="L66">        movableEntities.add(c);</span>
-<span class="fc" id="L67">    }</span>
+<span class="fc" id="L61">        double yPos = rand.nextDouble() * (getHeight() / 4.5);</span>
+<span class="fc" id="L62">        String path = &quot;cloud_&quot; + cloudType + &quot;.png&quot;;</span>
+<span class="fc" id="L63">        Cloud c = new Cloud(path, xPos, yPos, velocity);</span>
+<span class="fc" id="L64">        entities.add(c);</span>
+<span class="fc" id="L65">        movableEntities.add(c);</span>
+<span class="fc" id="L66">    }</span>
 
     double getGravity() {
-<span class="fc" id="L70">        return gravity;</span>
+<span class="fc" id="L69">        return gravity;</span>
     }
 
     @Override
     public Hero getHero() {
-<span class="fc" id="L75">        return hero;</span>
+<span class="fc" id="L74">        return hero;</span>
     }
 
     @Override
     public Finish getFinish() {
-<span class="fc" id="L80">        return finish;</span>
+<span class="fc" id="L79">        return finish;</span>
     }
 
     List&lt;MovableEntity&gt; getMovableEntities() {
-<span class="fc" id="L84">        return movableEntities;</span>
+<span class="fc" id="L83">        return movableEntities;</span>
     }
 
     @Override
     public List&lt;Entity&gt; getEntities() {
-<span class="fc" id="L89">        return entities;</span>
+<span class="fc" id="L88">        return entities;</span>
     }
 
     @Override
     public double getHeight() {
-<span class="fc" id="L94">        return height;</span>
+<span class="fc" id="L93">        return height;</span>
     }
 
     @Override
     public double getWidth() {
-<span class="fc" id="L99">        return width;</span>
+<span class="fc" id="L98">        return width;</span>
     }
 
     @Override
     public void tick() {
         // spawn 1-3 clouds if tick is 0 and velocity is positive
-<span class="fc bfc" id="L105" title="All 2 branches covered.">        if (cloudVelocity &gt; 0) {</span>
-<span class="fc" id="L106">            tick--;</span>
-<span class="fc bfc" id="L107" title="All 2 branches covered.">            if (tick &gt; 0) {</span>
-<span class="fc" id="L108">                return;</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">        if (cloudVelocity &gt; 0) {</span>
+<span class="fc" id="L105">            tick--;</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">            if (tick &gt; 0) {</span>
+<span class="fc" id="L107">                return;</span>
             }
-<span class="fc" id="L110">            tick = (int) ((width * 4 / 5) / (cloudVelocity / GameEngineImpl.FPS));</span>
+<span class="fc" id="L109">            tick = (int) ((width * 4 / 5) / (cloudVelocity / GameEngineImpl.FPS));</span>
 
-<span class="fc" id="L112">            int spawn = new Random().nextInt(3) + 1;</span>
-<span class="fc bfc" id="L113" title="All 2 branches covered.">            for (int i = 0; i &lt; spawn; i++) {</span>
-<span class="fc" id="L114">                addCloud(cloudVelocity);</span>
+<span class="fc" id="L111">            int spawn = new Random().nextInt(3) + 1;</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">            for (int i = 0; i &lt; spawn; i++) {</span>
+<span class="fc" id="L113">                addCloud(cloudVelocity);</span>
             }
         }
-<span class="fc" id="L117">    }</span>
+<span class="fc" id="L116">    }</span>
 
     @Override
     public double getFloorHeight() {
-<span class="fc" id="L121">        return floorHeight;</span>
+<span class="fc" id="L120">        return floorHeight;</span>
     }
 
     @Override
     public double getHeroX() {
-<span class="fc" id="L126">        return hero.getXPos();</span>
+<span class="fc" id="L125">        return hero.getXPos();</span>
     }
 
     /** Builder class for level */
@@ -138,151 +137,151 @@ public class LevelImpl implements Level {
         private double cloudVelocity;
         private Finish finish;
 
-<span class="fc" id="L141">        LevelBuilder() {</span>
-<span class="fc" id="L142">            entities = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L143">            movableEntities = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L144">            gravity = 9.8;</span>
-<span class="fc" id="L145">        }</span>
+<span class="fc" id="L140">        LevelBuilder() {</span>
+<span class="fc" id="L141">            entities = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L142">            movableEntities = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L143">            gravity = 9.8;</span>
+<span class="fc" id="L144">        }</span>
 
         LevelBuilder setWidth(double width) {
-<span class="fc" id="L148">            this.width = width;</span>
-<span class="fc" id="L149">            return this;</span>
+<span class="fc" id="L147">            this.width = width;</span>
+<span class="fc" id="L148">            return this;</span>
         }
 
         LevelBuilder setHeight(double height) {
-<span class="fc" id="L153">            this.height = height;</span>
-<span class="fc" id="L154">            return this;</span>
+<span class="fc" id="L152">            this.height = height;</span>
+<span class="fc" id="L153">            return this;</span>
         }
 
         LevelBuilder setFloorHeight(double floorHeight) {
-<span class="fc" id="L158">            this.floorHeight = height - floorHeight;</span>
-<span class="fc" id="L159">            return this;</span>
+<span class="fc" id="L157">            this.floorHeight = height - floorHeight;</span>
+<span class="fc" id="L158">            return this;</span>
         }
 
         LevelBuilder addHero(JSONObject config) {
-<span class="fc" id="L163">            String size = (String) config.get(&quot;size&quot;);</span>
-<span class="fc" id="L164">            double xPos = (double) config.get(&quot;x&quot;);</span>
-<span class="fc" id="L165">            double jumpHeight = (double) config.get(&quot;jumpHeight&quot;);</span>
-<span class="fc" id="L166">            Hero hero = new Hero(&quot;ch_stand1.png&quot;, xPos, size, jumpHeight, floorHeight);</span>
-<span class="fc" id="L167">            entities.add(hero);</span>
-<span class="fc" id="L168">            movableEntities.add(hero);</span>
-<span class="fc" id="L169">            this.hero = hero;</span>
-<span class="fc" id="L170">            addSafeZone();</span>
-<span class="fc" id="L171">            return this;</span>
+<span class="fc" id="L162">            String size = (String) config.get(&quot;size&quot;);</span>
+<span class="fc" id="L163">            double xPos = (double) config.get(&quot;x&quot;);</span>
+<span class="fc" id="L164">            double jumpHeight = (double) config.get(&quot;jumpHeight&quot;);</span>
+<span class="fc" id="L165">            Hero hero = new Hero(&quot;ch_stand1.png&quot;, xPos, size, jumpHeight, floorHeight);</span>
+<span class="fc" id="L166">            entities.add(hero);</span>
+<span class="fc" id="L167">            movableEntities.add(hero);</span>
+<span class="fc" id="L168">            this.hero = hero;</span>
+<span class="fc" id="L169">            addSafeZone();</span>
+<span class="fc" id="L170">            return this;</span>
         }
 
         private void addSafeZone() {
-<span class="fc" id="L175">            double size = hero.getHeight() * 1.2;</span>
-<span class="fc" id="L176">            SafeZone s = new SafeZone(hero.getInitialX() - size / 4,</span>
-<span class="fc" id="L177">                    hero.getInitialY() + hero.getHeight(), size,</span>
+<span class="fc" id="L174">            double size = hero.getHeight() * 1.2;</span>
+<span class="fc" id="L175">            SafeZone s = new SafeZone(hero.getInitialX() - size / 4,</span>
+<span class="fc" id="L176">                    hero.getInitialY() + hero.getHeight(), size,</span>
                     size, &quot;safe_zone.png&quot;);
-<span class="fc" id="L179">            entities.add(s);</span>
-<span class="fc" id="L180">        }</span>
+<span class="fc" id="L178">            entities.add(s);</span>
+<span class="fc" id="L179">        }</span>
 
         LevelBuilder addEnemy(JSONObject enemies) {
-<span class="fc" id="L183">            JSONArray type = (JSONArray) enemies.get(&quot;enemyType&quot;);</span>
-<span class="fc" id="L184">            JSONArray x = (JSONArray) enemies.get(&quot;x&quot;);</span>
-<span class="fc" id="L185">            JSONArray y = (JSONArray) enemies.get(&quot;y&quot;);</span>
+<span class="fc" id="L182">            JSONArray type = (JSONArray) enemies.get(&quot;enemyType&quot;);</span>
+<span class="fc" id="L183">            JSONArray x = (JSONArray) enemies.get(&quot;x&quot;);</span>
+<span class="fc" id="L184">            JSONArray y = (JSONArray) enemies.get(&quot;y&quot;);</span>
 
-<span class="pc bpc" id="L187" title="2 of 6 branches missed.">            if (x == null || y == null || type == null) {</span>
-<span class="fc" id="L188">                return this;</span>
+<span class="pc bpc" id="L186" title="2 of 6 branches missed.">            if (x == null || y == null || type == null) {</span>
+<span class="fc" id="L187">                return this;</span>
             }
 
-<span class="pc bpc" id="L191" title="1 of 4 branches missed.">            if (x.size() != y.size() || y.size() != type.size()) {</span>
-<span class="fc" id="L192">                return this;</span>
+<span class="pc bpc" id="L190" title="1 of 4 branches missed.">            if (x.size() != y.size() || y.size() != type.size()) {</span>
+<span class="fc" id="L191">                return this;</span>
             }
 
             // randomise initial stance of enemy
-<span class="fc" id="L196">            Random rand = new Random();</span>
-<span class="fc" id="L197">            String[] enemyImage = {&quot;B&quot;, &quot;G&quot;, &quot;P&quot;, &quot;R&quot;, &quot;Y&quot;};</span>
+<span class="fc" id="L195">            Random rand = new Random();</span>
+<span class="fc" id="L196">            String[] enemyImage = {&quot;B&quot;, &quot;G&quot;, &quot;P&quot;, &quot;R&quot;, &quot;Y&quot;};</span>
 
-<span class="fc bfc" id="L199" title="All 2 branches covered.">            for (int i = 0; i &lt; type.size(); i++) {</span>
+<span class="fc bfc" id="L198" title="All 2 branches covered.">            for (int i = 0; i &lt; type.size(); i++) {</span>
                 String enemyStance;
-<span class="fc" id="L201">                int randomStance = rand.nextInt(2);</span>
-<span class="fc bfc" id="L202" title="All 2 branches covered.">                if (randomStance == 0) {</span>
-<span class="fc" id="L203">                    enemyStance = &quot;a&quot;;</span>
+<span class="fc" id="L200">                int randomStance = rand.nextInt(2);</span>
+<span class="fc bfc" id="L201" title="All 2 branches covered.">                if (randomStance == 0) {</span>
+<span class="fc" id="L202">                    enemyStance = &quot;a&quot;;</span>
                 } else {
-<span class="fc" id="L205">                    enemyStance = &quot;b&quot;;</span>
+<span class="fc" id="L204">                    enemyStance = &quot;b&quot;;</span>
                 }
 
                 int enemyType;
-<span class="fc bfc" id="L209" title="All 2 branches covered.">                if (type.get(i).equals(&quot;still&quot;)) {</span>
+<span class="fc bfc" id="L208" title="All 2 branches covered.">                if (type.get(i).equals(&quot;still&quot;)) {</span>
                     // still enemies are yellow
-<span class="fc" id="L211">                    enemyType = 4;</span>
+<span class="fc" id="L210">                    enemyType = 4;</span>
                 } else {
-<span class="fc" id="L213">                    enemyType = rand.nextInt(4);</span>
+<span class="fc" id="L212">                    enemyType = rand.nextInt(4);</span>
                 }
 
-<span class="fc" id="L216">                String path = &quot;slime&quot; + enemyImage[enemyType] + enemyStance + &quot;.png&quot;;</span>
-<span class="fc" id="L217">                Enemy e = new Enemy((double) x.get(i), floorHeight - (double) y.get(i), path, (String) type.get(i));</span>
-<span class="fc" id="L218">                entities.add(e);</span>
-<span class="fc" id="L219">                movableEntities.add(e);</span>
+<span class="fc" id="L215">                String path = &quot;slime&quot; + enemyImage[enemyType] + enemyStance + &quot;.png&quot;;</span>
+<span class="fc" id="L216">                Enemy e = new Enemy((double) x.get(i), floorHeight - (double) y.get(i), path, (String) type.get(i));</span>
+<span class="fc" id="L217">                entities.add(e);</span>
+<span class="fc" id="L218">                movableEntities.add(e);</span>
             }
-<span class="fc" id="L221">            return this;</span>
+<span class="fc" id="L220">            return this;</span>
         }
 
         LevelBuilder spawnClouds(double velocity) {
-<span class="fc" id="L225">            cloudVelocity = velocity;</span>
+<span class="fc" id="L224">            cloudVelocity = velocity;</span>
             // spawn initial number of clouds
-<span class="fc bfc" id="L227" title="All 2 branches covered.">            for (int i = 0; i &lt; (int) width / 40; i++) {</span>
-<span class="fc" id="L228">                addCloud(velocity);</span>
+<span class="fc bfc" id="L226" title="All 2 branches covered.">            for (int i = 0; i &lt; (int) width / 40; i++) {</span>
+<span class="fc" id="L227">                addCloud(velocity);</span>
             }
-<span class="fc" id="L230">            return this;</span>
+<span class="fc" id="L229">            return this;</span>
         }
 
        private void addCloud(double velocity) {
-<span class="fc" id="L234">            Random rand = new Random();</span>
+<span class="fc" id="L233">            Random rand = new Random();</span>
             // randomize cloud image used
-<span class="fc" id="L236">            int cloudType = rand.nextInt(2) + 1;</span>
+<span class="fc" id="L235">            int cloudType = rand.nextInt(2) + 1;</span>
             // spawn them on screen
-<span class="fc" id="L238">            double xPos =  rand.nextDouble() * (width * 4);</span>
+<span class="fc" id="L237">            double xPos =  rand.nextDouble() * (width * 4);</span>
 
             // randomise y position of cloud
-<span class="fc" id="L241">            double yPos = rand.nextDouble() * (height / 4.5);</span>
-<span class="fc" id="L242">            String path = &quot;cloud_&quot; + cloudType + &quot;.png&quot;;</span>
-<span class="fc" id="L243">            Cloud c = new Cloud(path, xPos, yPos, velocity);</span>
-<span class="fc" id="L244">            entities.add(c);</span>
-<span class="fc" id="L245">            movableEntities.add(c);</span>
-<span class="fc" id="L246">        }</span>
+<span class="fc" id="L240">            double yPos = rand.nextDouble() * (height / 4.5);</span>
+<span class="fc" id="L241">            String path = &quot;cloud_&quot; + cloudType + &quot;.png&quot;;</span>
+<span class="fc" id="L242">            Cloud c = new Cloud(path, xPos, yPos, velocity);</span>
+<span class="fc" id="L243">            entities.add(c);</span>
+<span class="fc" id="L244">            movableEntities.add(c);</span>
+<span class="fc" id="L245">        }</span>
 
         LevelBuilder addPlatform(JSONObject coord) {
-<span class="fc" id="L249">            JSONArray x = (JSONArray)coord.get(&quot;x&quot;);</span>
-<span class="fc" id="L250">            JSONArray y = (JSONArray)coord.get(&quot;y&quot;);</span>
-<span class="fc" id="L251">            JSONArray platformType = (JSONArray)coord.get(&quot;platformType&quot;);</span>
+<span class="fc" id="L248">            JSONArray x = (JSONArray)coord.get(&quot;x&quot;);</span>
+<span class="fc" id="L249">            JSONArray y = (JSONArray)coord.get(&quot;y&quot;);</span>
+<span class="fc" id="L250">            JSONArray platformType = (JSONArray)coord.get(&quot;platformType&quot;);</span>
 
-<span class="pc bpc" id="L253" title="1 of 6 branches missed.">            if (x == null || y == null || platformType == null) {</span>
-<span class="fc" id="L254">                return this;</span>
+<span class="pc bpc" id="L252" title="1 of 6 branches missed.">            if (x == null || y == null || platformType == null) {</span>
+<span class="fc" id="L253">                return this;</span>
             }
 
-<span class="pc bpc" id="L257" title="1 of 4 branches missed.">            if (x.size() != y.size() || y.size() != platformType.size()) {</span>
-<span class="fc" id="L258">                return this;</span>
+<span class="pc bpc" id="L256" title="1 of 4 branches missed.">            if (x.size() != y.size() || y.size() != platformType.size()) {</span>
+<span class="fc" id="L257">                return this;</span>
             }
 
-<span class="fc bfc" id="L261" title="All 2 branches covered.">            for (int i = 0; i &lt; x.size(); i++) {</span>
-<span class="fc" id="L262">                String type = (String) platformType.get(i);</span>
-<span class="fc" id="L263">                String path = &quot;foot_tile.png&quot;;</span>
-<span class="fc bfc" id="L264" title="All 2 branches covered.">                if (type.equals(&quot;icy&quot;)) {</span>
-<span class="fc" id="L265">                    path = &quot;foot_tile_icy.png&quot;;</span>
+<span class="fc bfc" id="L260" title="All 2 branches covered.">            for (int i = 0; i &lt; x.size(); i++) {</span>
+<span class="fc" id="L261">                String type = (String) platformType.get(i);</span>
+<span class="fc" id="L262">                String path = &quot;foot_tile.png&quot;;</span>
+<span class="fc bfc" id="L263" title="All 2 branches covered.">                if (type.equals(&quot;icy&quot;)) {</span>
+<span class="fc" id="L264">                    path = &quot;foot_tile_icy.png&quot;;</span>
                 }
-<span class="fc" id="L267">                Platform p = new Platform((double) x.get(i), floorHeight - (double) y.get(i), type, path);</span>
-<span class="fc" id="L268">                entities.add(p);</span>
+<span class="fc" id="L266">                Platform p = new Platform((double) x.get(i), floorHeight - (double) y.get(i), type, path);</span>
+<span class="fc" id="L267">                entities.add(p);</span>
             }
-<span class="fc" id="L270">            return this;</span>
+<span class="fc" id="L269">            return this;</span>
         }
 
         LevelBuilder addFinish(JSONObject coord) {
-<span class="fc" id="L274">            double x = (double) coord.get(&quot;x&quot;);</span>
-<span class="fc" id="L275">            double y = (double) coord.get(&quot;y&quot;);</span>
-<span class="fc" id="L276">            String path = &quot;finish.png&quot;;</span>
-<span class="fc" id="L277">            Finish f = new Finish(x, floorHeight - y, path);</span>
-<span class="fc" id="L278">            entities.add(f);</span>
-<span class="fc" id="L279">            finish = f;</span>
-<span class="fc" id="L280">            return this;</span>
+<span class="fc" id="L273">            double x = (double) coord.get(&quot;x&quot;);</span>
+<span class="fc" id="L274">            double y = (double) coord.get(&quot;y&quot;);</span>
+<span class="fc" id="L275">            String path = &quot;finish.png&quot;;</span>
+<span class="fc" id="L276">            Finish f = new Finish(x, floorHeight - y, path);</span>
+<span class="fc" id="L277">            entities.add(f);</span>
+<span class="fc" id="L278">            finish = f;</span>
+<span class="fc" id="L279">            return this;</span>
         }
 
         LevelImpl build() {
-<span class="fc" id="L284">            LevelImpl level = new LevelImpl(this);</span>
-<span class="fc" id="L285">            return level;</span>
+<span class="fc" id="L283">            LevelImpl level = new LevelImpl(this);</span>
+<span class="fc" id="L284">            return level;</span>
         }
     }
 }

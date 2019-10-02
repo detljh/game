@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="stickman.controller.CloudControllerTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2019-10-02T11:50:20" hostname="LAPTOP-9KGUS48K" time="0.005">
+<testsuite name="stickman.controller.CloudControllerTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2019-10-02T14:47:11" hostname="LAPTOP-9KGUS48K" time="0.001">
   <properties/>
-  <testcase name="stopMoving" classname="stickman.controller.CloudControllerTest" time="0.002"/>
+  <testcase name="stopMoving" classname="stickman.controller.CloudControllerTest" time="0.0"/>
   <testcase name="moveLeft" classname="stickman.controller.CloudControllerTest" time="0.0"/>
-  <testcase name="jump" classname="stickman.controller.CloudControllerTest" time="0.001"/>
+  <testcase name="jump" classname="stickman.controller.CloudControllerTest" time="0.0"/>
   <testcase name="move" classname="stickman.controller.CloudControllerTest" time="0.0"/>
   <testcase name="tick" classname="stickman.controller.CloudControllerTest" time="0.0"/>
   <testcase name="moveRight" classname="stickman.controller.CloudControllerTest" time="0.0"/>

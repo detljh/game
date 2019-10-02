@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="stickman.controller.HeroControllerTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2019-10-02T11:50:20" hostname="LAPTOP-9KGUS48K" time="0.066">
+<testsuite name="stickman.controller.HeroControllerTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2019-10-02T14:47:11" hostname="LAPTOP-9KGUS48K" time="0.092">
   <properties/>
-  <testcase name="stopMoving" classname="stickman.controller.HeroControllerTest" time="0.002"/>
-  <testcase name="platformMovement" classname="stickman.controller.HeroControllerTest" time="0.002"/>
-  <testcase name="moveLeft" classname="stickman.controller.HeroControllerTest" time="0.001"/>
-  <testcase name="jump" classname="stickman.controller.HeroControllerTest" time="0.05"/>
-  <testcase name="move" classname="stickman.controller.HeroControllerTest" time="0.002"/>
-  <testcase name="tick" classname="stickman.controller.HeroControllerTest" time="0.002"/>
-  <testcase name="restartHero" classname="stickman.controller.HeroControllerTest" time="0.002"/>
-  <testcase name="moveRight" classname="stickman.controller.HeroControllerTest" time="0.002"/>
+  <testcase name="stopMoving" classname="stickman.controller.HeroControllerTest" time="0.003"/>
+  <testcase name="platformMovement" classname="stickman.controller.HeroControllerTest" time="0.013"/>
+  <testcase name="moveLeft" classname="stickman.controller.HeroControllerTest" time="0.01"/>
+  <testcase name="jump" classname="stickman.controller.HeroControllerTest" time="0.03"/>
+  <testcase name="move" classname="stickman.controller.HeroControllerTest" time="0.013"/>
+  <testcase name="tick" classname="stickman.controller.HeroControllerTest" time="0.004"/>
+  <testcase name="restartHero" classname="stickman.controller.HeroControllerTest" time="0.004"/>
+  <testcase name="moveRight" classname="stickman.controller.HeroControllerTest" time="0.003"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

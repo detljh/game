@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="stickman.model.FinishTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2019-10-02T11:50:20" hostname="LAPTOP-9KGUS48K" time="0.001">
+<testsuite name="stickman.model.FinishTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2019-10-02T14:47:11" hostname="LAPTOP-9KGUS48K" time="0.038">
   <properties/>
-  <testcase name="getImagePath" classname="stickman.model.FinishTest" time="0.0"/>
-  <testcase name="getXPos" classname="stickman.model.FinishTest" time="0.0"/>
-  <testcase name="getYPos" classname="stickman.model.FinishTest" time="0.0"/>
-  <testcase name="getHeight" classname="stickman.model.FinishTest" time="0.0"/>
-  <testcase name="getLayer" classname="stickman.model.FinishTest" time="0.0"/>
-  <testcase name="getWidth" classname="stickman.model.FinishTest" time="0.0"/>
+  <testcase name="getImagePath" classname="stickman.model.FinishTest" time="0.001"/>
+  <testcase name="getXPos" classname="stickman.model.FinishTest" time="0.007"/>
+  <testcase name="getYPos" classname="stickman.model.FinishTest" time="0.002"/>
+  <testcase name="getHeight" classname="stickman.model.FinishTest" time="0.003"/>
+  <testcase name="getLayer" classname="stickman.model.FinishTest" time="0.001"/>
+  <testcase name="getWidth" classname="stickman.model.FinishTest" time="0.008"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>
