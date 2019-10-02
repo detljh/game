@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="stickman.collision.HeroCollisionStrategyTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2019-10-02T11:50:20" hostname="LAPTOP-9KGUS48K" time="0.047">
+  <properties/>
+  <testcase name="handlePlatformMovement" classname="stickman.collision.HeroCollisionStrategyTest" time="0.014"/>
+  <testcase name="handleCollision" classname="stickman.collision.HeroCollisionStrategyTest" time="0.007"/>
+  <testcase name="checkCollision" classname="stickman.collision.HeroCollisionStrategyTest" time="0.008"/>
+  <testcase name="handleDeath" classname="stickman.collision.HeroCollisionStrategyTest" time="0.005"/>
+  <testcase name="handleKill" classname="stickman.collision.HeroCollisionStrategyTest" time="0.007"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

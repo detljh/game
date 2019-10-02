@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MovableEntity.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">stickman</a> &gt; <a href="index.source.html" class="el_package">stickman.model</a> &gt; <span class="el_source">MovableEntity.java</span></div><h1>MovableEntity.java</h1><pre class="source lang-java linenums">package stickman.model;
+
+import stickman.collision.CollisionStrategy;
+import stickman.controller.Controller;
+
+public abstract class MovableEntity implements Entity {
+    private String imagePath;
+    double xPos;
+    private double yPos;
+    private double xVel;
+    private double yVel;
+    // stores entity's desired position before it being set to prevent movements being backtracked by collisions
+    private double desiredX;
+    private double desiredY;
+
+<span class="fc" id="L16">    MovableEntity(double xPos, String imagePath) {</span>
+<span class="fc" id="L17">        this.xPos = xPos;</span>
+<span class="fc" id="L18">        this.imagePath = imagePath;</span>
+<span class="fc" id="L19">    }</span>
+
+    public void updateImagePath(String path) {
+<span class="fc" id="L22">        imagePath = path;</span>
+<span class="fc" id="L23">    }</span>
+
+    @Override
+    public String getImagePath() {
+<span class="fc" id="L27">        return imagePath;</span>
+    }
+
+    @Override
+    public double getXPos() {
+<span class="fc" id="L32">        return xPos;</span>
+    }
+
+    @Override
+    public double getYPos() {
+<span class="fc" id="L37">        return yPos;</span>
+    }
+
+    @Override
+    public abstract Layer getLayer();
+
+    public double getDesiredX() {
+<span class="fc" id="L44">        return desiredX;</span>
+    }
+
+    public double getDesiredY() {
+<span class="fc" id="L48">        return desiredY;</span>
+    }
+
+    public double getXVel() {
+<span class="fc" id="L52">        return xVel;</span>
+    }
+
+    public double getYVel() {
+<span class="fc" id="L56">        return yVel;</span>
+    }
+
+    public void setDesiredX(double xPos) {
+<span class="fc" id="L60">        desiredX = xPos;</span>
+<span class="fc" id="L61">    }</span>
+
+    public void setDesiredY(double yPos) {
+<span class="fc" id="L64">        desiredY = yPos;</span>
+<span class="fc" id="L65">    }</span>
+
+    public void setXVel(double xVel) {
+<span class="fc" id="L68">        this.xVel = xVel;</span>
+<span class="fc" id="L69">    }</span>
+
+    public void setYVel(double yVel) {
+<span class="fc" id="L72">        this.yVel = yVel;</span>
+<span class="fc" id="L73">    }</span>
+
+    public void setXPos(double xPos) {
+        // prevent entities from moving off left side of screen
+<span class="fc bfc" id="L77" title="All 2 branches covered.">        if (xPos &lt; 0) {</span>
+<span class="fc" id="L78">            xPos = 0;</span>
+        }
+<span class="fc" id="L80">        this.xPos = xPos;</span>
+<span class="fc" id="L81">    }</span>
+
+    public void setYPos(double yPos) {
+<span class="fc" id="L84">        this.yPos = yPos;</span>
+<span class="fc" id="L85">    }</span>
+
+    public abstract Controller getController();
+    public abstract CollisionStrategy getCollisionStrategy();
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="stickman.model.HeroTest" tests="26" skipped="0" failures="0" errors="0" timestamp="2019-10-02T11:50:20" hostname="LAPTOP-9KGUS48K" time="0.008">
+  <properties/>
+  <testcase name="getInitialX" classname="stickman.model.HeroTest" time="0.001"/>
+  <testcase name="getInitialY" classname="stickman.model.HeroTest" time="0.0"/>
+  <testcase name="decrementLives" classname="stickman.model.HeroTest" time="0.0"/>
+  <testcase name="setDesiredX" classname="stickman.model.HeroTest" time="0.0"/>
+  <testcase name="setDesiredY" classname="stickman.model.HeroTest" time="0.0"/>
+  <testcase name="getJumpHeight" classname="stickman.model.HeroTest" time="0.0"/>
+  <testcase name="getDesiredX" classname="stickman.model.HeroTest" time="0.0"/>
+  <testcase name="getDesiredY" classname="stickman.model.HeroTest" time="0.0"/>
+  <testcase name="getImagePath" classname="stickman.model.HeroTest" time="0.0"/>
+  <testcase name="getCollisionStrategy" classname="stickman.model.HeroTest" time="0.0"/>
+  <testcase name="getXPos" classname="stickman.model.HeroTest" time="0.0"/>
+  <testcase name="getXVel" classname="stickman.model.HeroTest" time="0.0"/>
+  <testcase name="getYPos" classname="stickman.model.HeroTest" time="0.0"/>
+  <testcase name="getYVel" classname="stickman.model.HeroTest" time="0.0"/>
+  <testcase name="updateImagePath" classname="stickman.model.HeroTest" time="0.0"/>
+  <testcase name="getController" classname="stickman.model.HeroTest" time="0.0"/>
+  <testcase name="getHeight" classname="stickman.model.HeroTest" time="0.0"/>
+  <testcase name="getHorizontalMovement" classname="stickman.model.HeroTest" time="0.0"/>
+  <testcase name="getJumpForce" classname="stickman.model.HeroTest" time="0.0"/>
+  <testcase name="getRemainingLives" classname="stickman.model.HeroTest" time="0.0"/>
+  <testcase name="getLayer" classname="stickman.model.HeroTest" time="0.0"/>
+  <testcase name="getWidth" classname="stickman.model.HeroTest" time="0.0"/>
+  <testcase name="setXPos" classname="stickman.model.HeroTest" time="0.0"/>
+  <testcase name="setXVel" classname="stickman.model.HeroTest" time="0.0"/>
+  <testcase name="setYPos" classname="stickman.model.HeroTest" time="0.0"/>
+  <testcase name="setYVel" classname="stickman.model.HeroTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

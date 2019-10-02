@@ -32,5 +32,4 @@ public class GameWindowTest {
         assertEquals(640, scene.getWidth(), 0.001);
         assertEquals(400, scene.getHeight(), 0.001);
     }
-
 }

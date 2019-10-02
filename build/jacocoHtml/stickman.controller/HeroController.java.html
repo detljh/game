@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HeroController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">stickman</a> &gt; <a href="index.source.html" class="el_package">stickman.controller</a> &gt; <span class="el_source">HeroController.java</span></div><h1>HeroController.java</h1><pre class="source lang-java linenums">package stickman.controller;
+
+import stickman.model.GameEngineImpl;
+import stickman.model.Hero;
+import stickman.model.Level;
+import stickman.model.LevelImpl;
+
+public class HeroController implements Controller {
+    private Hero hero;
+    // keep track of imagepath frame for animation
+<span class="fc" id="L11">    private int walkFrame = 0;</span>
+<span class="fc" id="L12">    private int standFrame = 0;</span>
+<span class="fc" id="L13">    private int tick = GameEngineImpl.FPS;</span>
+    private LevelImpl level;
+    private double beforeJumpY;
+    private boolean onFloor;
+    private boolean right;
+    private boolean left;
+    private boolean jump;
+    private String prevMove;
+
+<span class="fc" id="L22">    public HeroController(Hero hero) {</span>
+<span class="fc" id="L23">        this.hero = hero;</span>
+<span class="fc" id="L24">    }</span>
+
+    @Override
+    public boolean jump() {
+<span class="fc" id="L28">        double jumpForce = hero.getJumpForce() / GameEngineImpl.FPS;</span>
+<span class="fc" id="L29">        double yVel = hero.getYVel() / (GameEngineImpl.FPS / 15);</span>
+<span class="fc bfc" id="L30" title="All 2 branches covered.">        if (onFloor) {</span>
+            // get initial y pos before the jump
+<span class="fc" id="L32">            beforeJumpY = hero.getYPos();</span>
+<span class="fc" id="L33">            jump = true;</span>
+<span class="fc" id="L34">            hero.setYVel(yVel + jumpForce);</span>
+<span class="fc" id="L35">            hero.setDesiredY(hero.getDesiredY() - hero.getYVel());</span>
+<span class="fc" id="L36">            return true;</span>
+<span class="fc bfc" id="L37" title="All 2 branches covered.">        } else if (jump) {</span>
+<span class="fc" id="L38">            hero.setYVel(yVel + jumpForce);</span>
+<span class="fc" id="L39">            hero.setDesiredY(hero.getDesiredY() - hero.getYVel());</span>
+            // continue rising until the max jump height is reached
+<span class="fc bfc" id="L41" title="All 2 branches covered.">            if (hero.getDesiredY() &lt; beforeJumpY - hero.getJumpHeight()) {</span>
+<span class="fc" id="L42">                jump = false;</span>
+            }
+        }
+<span class="fc" id="L45">        return false;</span>
+    }
+
+    @Override
+    public boolean moveLeft() {
+<span class="fc" id="L50">        prevMove = &quot;left&quot;;</span>
+<span class="fc" id="L51">        left = true;</span>
+
+<span class="fc" id="L53">        double xVel = hero.getXVel() / GameEngineImpl.FPS;</span>
+        // make x velocity negative to move left
+<span class="fc bfc" id="L55" title="All 2 branches covered.">        if (xVel &gt; 0) {</span>
+<span class="fc" id="L56">            xVel *= -1;</span>
+        }
+
+<span class="fc" id="L59">        double horizontalMovement = hero.getHorizontalMovement() / GameEngineImpl.FPS;</span>
+
+<span class="fc" id="L61">        hero.setXVel(xVel - horizontalMovement);</span>
+<span class="fc" id="L62">        hero.setDesiredX(hero.getXPos() + hero.getXVel());</span>
+
+        // slow down animation
+<span class="fc bfc" id="L65" title="All 2 branches covered.">        if (tick &gt; (GameEngineImpl.FPS * 0.9)) {</span>
+<span class="fc" id="L66">            return true;</span>
+        }
+<span class="fc" id="L68">        tick = GameEngineImpl.FPS;</span>
+
+        // loop around walk frames facing left
+<span class="fc" id="L71">        walkFrame = walkFrame % 4 + 5;</span>
+<span class="fc" id="L72">        String path = &quot;ch_walk&quot; + walkFrame + &quot;.png&quot;;</span>
+<span class="fc" id="L73">        hero.updateImagePath(path);</span>
+<span class="fc" id="L74">        return true;</span>
+    }
+
+    @Override
+    public boolean moveRight() {
+<span class="fc" id="L79">        prevMove = &quot;right&quot;;</span>
+<span class="fc" id="L80">        right = true;</span>
+
+<span class="fc" id="L82">        double xVel = hero.getXVel() / GameEngineImpl.FPS;</span>
+        // make x velocity positive to move right
+<span class="fc bfc" id="L84" title="All 2 branches covered.">        if (xVel &lt; 0) {</span>
+<span class="fc" id="L85">            xVel *= -1;</span>
+        }
+<span class="fc" id="L87">        double horizontalMovement = hero.getHorizontalMovement() / GameEngineImpl.FPS;</span>
+
+<span class="fc" id="L89">        hero.setXVel(xVel + horizontalMovement);</span>
+<span class="fc" id="L90">        hero.setDesiredX(hero.getXPos() + hero.getXVel());</span>
+
+        // slow down animation
+<span class="fc bfc" id="L93" title="All 2 branches covered.">        if (tick &gt; (GameEngineImpl.FPS * 0.9)) {</span>
+<span class="fc" id="L94">            return true;</span>
+        }
+<span class="fc" id="L96">        tick = GameEngineImpl.FPS;</span>
+
+        // loop around walk frames going right
+<span class="fc" id="L99">        walkFrame = walkFrame % 4 + 1;</span>
+<span class="fc" id="L100">        String path = &quot;ch_walk&quot; + walkFrame + &quot;.png&quot;;</span>
+<span class="fc" id="L101">        hero.updateImagePath(path);</span>
+<span class="fc" id="L102">        return true;</span>
+    }
+
+    @Override
+    public boolean stopMoving() {
+<span class="fc" id="L107">        right = false;</span>
+<span class="fc" id="L108">        left = false;</span>
+<span class="fc" id="L109">        hero.setXVel(0);</span>
+
+        // slow down animation
+<span class="fc bfc" id="L112" title="All 2 branches covered.">        if (tick &gt; (GameEngineImpl.FPS * 0.8)) {</span>
+<span class="fc" id="L113">            return true;</span>
+        }
+<span class="fc" id="L115">        tick = GameEngineImpl.FPS;</span>
+
+        // update stand frame based on direction hero was previously walking in
+<span class="fc bfc" id="L118" title="All 2 branches covered.">        if (walkFrame &lt;= 4) {</span>
+<span class="fc" id="L119">            standFrame = standFrame % 3 + 1;</span>
+<span class="fc" id="L120">            String path = &quot;ch_stand&quot; + standFrame + &quot;.png&quot;;</span>
+<span class="fc" id="L121">            hero.updateImagePath(path);</span>
+<span class="fc" id="L122">        } else {</span>
+<span class="fc" id="L123">            standFrame = standFrame % 3 + 4;</span>
+<span class="fc" id="L124">            String path = &quot;ch_stand&quot; + standFrame + &quot;.png&quot;;</span>
+<span class="fc" id="L125">            hero.updateImagePath(path);</span>
+        }
+<span class="fc" id="L127">        return true;</span>
+    }
+
+    @Override
+    public void move() {
+<span class="fc" id="L132">        hero.setXPos(hero.getDesiredX());</span>
+<span class="fc" id="L133">        hero.setYPos(hero.getDesiredY());</span>
+<span class="fc" id="L134">    }</span>
+
+    public void restartHero() {
+        // set hero's position back to original starting position
+<span class="fc" id="L138">        hero.setDesiredX(hero.getInitialX());</span>
+<span class="fc" id="L139">        hero.setDesiredY(hero.getInitialY());</span>
+<span class="fc" id="L140">    }</span>
+
+    @Override
+    public void tick() {
+<span class="fc" id="L144">        tick--;</span>
+
+<span class="fc bfc" id="L146" title="All 2 branches covered.">        if (jump) {</span>
+<span class="fc" id="L147">           jump();</span>
+        }
+
+<span class="fc bfc" id="L150" title="All 2 branches covered.">        if (right) {</span>
+<span class="fc" id="L151">            moveRight();</span>
+<span class="fc bfc" id="L152" title="All 2 branches covered.">        } else if (left) {</span>
+<span class="fc" id="L153">            moveLeft();</span>
+        } else {
+<span class="fc" id="L155">            stopMoving();</span>
+        }
+
+        // make sure hero does not go beneath floor
+<span class="fc bfc" id="L159" title="All 2 branches covered.">        if (level.getFloorHeight() - (hero.getDesiredY() + hero.getHeight()) &lt; 0.001) {</span>
+<span class="fc" id="L160">            hero.setYVel(0);</span>
+<span class="fc" id="L161">            hero.setDesiredY(level.getFloorHeight() - hero.getHeight());</span>
+<span class="fc" id="L162">            onFloor = true;</span>
+<span class="fc" id="L163">            jump = false;</span>
+        }
+<span class="fc" id="L165">    }</span>
+
+    @Override
+    public void setLevel(LevelImpl level) {
+<span class="fc" id="L169">        this.level = level;</span>
+<span class="fc" id="L170">    }</span>
+
+    @Override
+    public Level getLevel() {
+<span class="fc" id="L174">        return level;</span>
+    }
+
+    public void setOnFloor(boolean value) {
+<span class="fc" id="L178">        onFloor = value;</span>
+<span class="fc" id="L179">    }</span>
+
+    public void setJump(boolean value) {
+<span class="fc" id="L182">        jump = value;</span>
+<span class="fc" id="L183">    }</span>
+
+    public void decrementLives() {
+<span class="fc" id="L186">        hero.decrementLives();</span>
+<span class="fc" id="L187">    }</span>
+
+    public int getRemainingLives() {
+<span class="fc" id="L190">        return hero.getRemainingLives();</span>
+    }
+
+    public void platformMovement(String type) {
+<span class="fc bfc" id="L194" title="All 2 branches covered.">        if (type.equals(&quot;icy&quot;)) {</span>
+<span class="fc bfc" id="L195" title="All 2 branches covered.">            if (prevMove.equals(&quot;right&quot;)) {</span>
+                // if hero was previously moving right, continue sliding right
+<span class="fc" id="L197">                hero.setDesiredX(hero.getXPos() + hero.getXVel() + 0.2);</span>
+            } else {
+                // if hero was previously moving left, continue sliding left
+<span class="fc" id="L200">                hero.setDesiredX(hero.getXPos() + hero.getXVel() - 0.2);</span>
+            }
+        }
+<span class="fc" id="L203">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

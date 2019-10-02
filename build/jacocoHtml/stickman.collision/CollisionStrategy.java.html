@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CollisionStrategy.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">stickman</a> &gt; <a href="index.source.html" class="el_package">stickman.collision</a> &gt; <span class="el_source">CollisionStrategy.java</span></div><h1>CollisionStrategy.java</h1><pre class="source lang-java linenums">package stickman.collision;
+
+import stickman.model.Entity;
+import stickman.model.MovableEntity;
+
+<span class="fc" id="L6">public class CollisionStrategy {</span>
+    /**
+     * Default method for collision strategies. Checks if two entities collide with each other.
+     *
+     * @param a An entity that can move
+     * @param other An entity that may collide with @param a
+     * @return True if there is a colllision between different entities that are not in the background layer, false
+     * otherwise
+     */
+    public boolean checkCollision(MovableEntity a, Entity other) {
+<span class="fc bfc" id="L16" title="All 2 branches covered.">        if (a.equals(other)) {</span>
+<span class="fc" id="L17">            return false;</span>
+        }
+
+<span class="fc bfc" id="L20" title="All 4 branches covered.">        if (other.getLayer().equals(Entity.Layer.BACKGROUND) || other.getLayer().equals(Entity.Layer.FINISH)) {</span>
+<span class="fc" id="L21">            return false;</span>
+        }
+
+<span class="fc bfc" id="L24" title="All 2 branches covered.">        return (a.getDesiredX() &lt; (other.getXPos() + other.getWidth())) &amp;&amp;</span>
+<span class="fc bfc" id="L25" title="All 2 branches covered.">                ((a.getDesiredX() + a.getWidth()) &gt; other.getXPos()) &amp;&amp;</span>
+<span class="fc bfc" id="L26" title="All 2 branches covered.">                (a.getDesiredY() &lt; (other.getYPos() + other.getHeight())) &amp;&amp;</span>
+<span class="fc bfc" id="L27" title="All 2 branches covered.">                ((a.getDesiredY() + a.getHeight()) &gt; other.getYPos());</span>
+    }
+
+    /**
+     * Default method for collision strategies. Does nothing if there is a collision.
+     * Returns the status of the game if it has changed, otherwise null.
+     *
+     * @param a An entity that can move
+     * @param other An entity that may collide with @param a
+     */
+    public String handleCollision(MovableEntity a, Entity other) {
+<span class="fc" id="L38">        return null;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

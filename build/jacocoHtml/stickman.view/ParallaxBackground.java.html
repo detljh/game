@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ParallaxBackground.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">stickman</a> &gt; <a href="index.source.html" class="el_package">stickman.view</a> &gt; <span class="el_source">ParallaxBackground.java</span></div><h1>ParallaxBackground.java</h1><pre class="source lang-java linenums">package stickman.view;
+
+import javafx.geometry.Rectangle2D;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Rectangle;
+import stickman.model.GameEngine;
+
+<span class="fc" id="L11">public class ParallaxBackground implements BackgroundDrawer {</span>
+
+    private double width;
+    private double height;
+    private Image[] images;
+    private ImageView[] imageViews;
+    private double[] parallaxEffect;
+    private Rectangle floor;
+
+    @Override
+    public void draw(GameEngine model, Pane pane) {
+<span class="fc" id="L22">        this.width = pane.getWidth();</span>
+<span class="fc" id="L23">        this.height = pane.getHeight();</span>
+<span class="fc" id="L24">        double height = pane.getHeight();</span>
+<span class="fc" id="L25">        double floorHeight = model.getCurrentLevel().getFloorHeight();</span>
+
+<span class="fc" id="L27">        this.images = new Image[6];</span>
+
+<span class="fc" id="L29">        images[0] = new Image(&quot;landscape_0000_1_trees.png&quot;);</span>
+<span class="fc" id="L30">        images[1] = new Image(&quot;landscape_0001_2_trees.png&quot;);</span>
+<span class="fc" id="L31">        images[2] = new Image(&quot;landscape_0002_3_trees.png&quot;);</span>
+<span class="fc" id="L32">        images[3] = new Image(&quot;landscape_0003_4_mountain.png&quot;);</span>
+<span class="fc" id="L33">        images[4] = new Image(&quot;landscape_0004_5_clouds.png&quot;);</span>
+<span class="fc" id="L34">        images[5] = new Image(&quot;landscape_0005_6_background.png&quot;);</span>
+
+<span class="fc" id="L36">        this.parallaxEffect = new double[6];</span>
+
+<span class="fc" id="L38">        parallaxEffect[0] = 0.5;</span>
+<span class="fc" id="L39">        parallaxEffect[1] = 0.4;</span>
+<span class="fc" id="L40">        parallaxEffect[2] = 0.2;</span>
+<span class="fc" id="L41">        parallaxEffect[3] = 0.05;</span>
+<span class="fc" id="L42">        parallaxEffect[4] = 0.05;</span>
+<span class="fc" id="L43">        parallaxEffect[5] = 0.0;</span>
+
+<span class="fc" id="L45">        this.imageViews = new ImageView[6];</span>
+
+<span class="fc bfc" id="L47" title="All 2 branches covered.">        for (int i = 0;i &lt; 6; i++) {</span>
+<span class="fc" id="L48">            imageViews[i] = new ImageView(images[i]);</span>
+<span class="fc" id="L49">            double rawHeight = images[i].getHeight();</span>
+<span class="fc" id="L50">            double rawWidth = images[i].getWidth() / 2; // images are all double stitched</span>
+
+<span class="fc" id="L52">            imageViews[i].setViewOrder(1001.0 + i);</span>
+<span class="fc" id="L53">            imageViews[i].setFitHeight(height);</span>
+<span class="fc" id="L54">            imageViews[i].setFitWidth(width);</span>
+<span class="fc" id="L55">            imageViews[i].setX(0);</span>
+<span class="fc" id="L56">            imageViews[i].setY(0);</span>
+<span class="fc" id="L57">            imageViews[i].setViewport(new Rectangle2D(0, 0, rawWidth, rawHeight));</span>
+
+<span class="fc" id="L59">            pane.getChildren().add(imageViews[i]);</span>
+        }
+
+<span class="fc" id="L62">        floor = new Rectangle(0, floorHeight, width, height - floorHeight);</span>
+<span class="fc" id="L63">        floor.setFill(Paint.valueOf(&quot;#1d2b38&quot;));</span>
+<span class="fc" id="L64">        floor.setViewOrder(1000.0);</span>
+<span class="fc" id="L65">        pane.getChildren().add(floor);</span>
+<span class="fc" id="L66">    }</span>
+
+    @Override
+    public void update(double xViewportOffset, double yViewportOffset) {
+<span class="fc bfc" id="L70" title="All 2 branches covered.">        for (int i = 0;i &lt; 6; i++) {</span>
+<span class="fc" id="L71">            double rawHeight = images[i].getHeight();</span>
+<span class="fc" id="L72">            double rawWidth = images[i].getWidth() / 2; // images are all double stitched</span>
+<span class="fc" id="L73">            double widthScale = rawWidth / width;</span>
+<span class="fc" id="L74">            double heightScale = rawHeight / height;</span>
+<span class="fc" id="L75">            double translationX = (xViewportOffset * widthScale * parallaxEffect[i]) % rawWidth;</span>
+<span class="fc" id="L76">            double translationY = (yViewportOffset * heightScale * parallaxEffect[i]) % rawHeight;</span>
+<span class="fc" id="L77">            imageViews[i].setViewport(new Rectangle2D(translationX, -translationY, rawWidth, rawHeight));</span>
+        }
+
+<span class="fc" id="L80">        floor.setTranslateY(yViewportOffset);</span>
+<span class="fc" id="L81">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

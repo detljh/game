@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GameWindow.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">stickman</a> &gt; <a href="index.source.html" class="el_package">stickman.view</a> &gt; <span class="el_source">GameWindow.java</span></div><h1>GameWindow.java</h1><pre class="source lang-java linenums">package stickman.view;
+
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.util.Duration;
+import stickman.controller.HeroController;
+import stickman.model.Entity;
+import stickman.model.GameEngine;
+import java.util.ArrayList;
+import java.util.List;
+
+public class GameWindow {
+    private final int width;
+    private final int height;
+    private Scene scene;
+    private Pane pane;
+    private GameEngine model;
+    private List&lt;EntityView&gt; entityViews;
+    private BackgroundDrawer backgroundDrawer;
+    private Text time;
+    private Text lives;
+    private Timeline timeline;
+<span class="fc" id="L30">    private double xViewportOffset = 0.0;</span>
+    private static double VIEWPORT_MARGIN_X;
+<span class="fc" id="L32">    private double yViewportOffset = 0.0;</span>
+    private static double VIEWPORT_MARGIN_Y;
+
+<span class="fc" id="L35">    public GameWindow(GameEngine model, int width, int height) {</span>
+<span class="fc" id="L36">        this.model = model;</span>
+<span class="fc" id="L37">        this.pane = new Pane();</span>
+<span class="fc" id="L38">        this.width = width;</span>
+<span class="fc" id="L39">        this.height = height;</span>
+<span class="fc" id="L40">        this.scene = new Scene(pane, width, height);</span>
+<span class="fc" id="L41">        VIEWPORT_MARGIN_X = width * 2/5;</span>
+<span class="fc" id="L42">        VIEWPORT_MARGIN_Y = height * 3/5;</span>
+
+<span class="fc" id="L44">        time = new Text();</span>
+<span class="fc" id="L45">        time.setFill(Color.BLACK);</span>
+<span class="fc" id="L46">        time.setX(0.0);</span>
+<span class="fc" id="L47">        time.setY(10.0);</span>
+<span class="fc" id="L48">        time.setViewOrder(0.0);</span>
+<span class="fc" id="L49">        pane.getChildren().add(time);</span>
+
+<span class="fc" id="L51">        lives = new Text();</span>
+<span class="fc" id="L52">        lives.setFill(Color.BLACK);</span>
+<span class="fc" id="L53">        lives.setX(width - 50.0);</span>
+<span class="fc" id="L54">        lives.setY(10.0);</span>
+<span class="fc" id="L55">        lives.setViewOrder(0.0);</span>
+<span class="fc" id="L56">        pane.getChildren().add(lives);</span>
+
+<span class="fc" id="L58">        this.entityViews = new ArrayList&lt;&gt;();</span>
+
+<span class="fc" id="L60">        KeyboardInputHandler keyboardInputHandler = new KeyboardInputHandler((HeroController) model.getCurrentLevel().getHero().getController());</span>
+
+<span class="fc" id="L62">        scene.setOnKeyPressed(keyboardInputHandler::handlePressed);</span>
+<span class="fc" id="L63">        scene.setOnKeyReleased(keyboardInputHandler::handleReleased);</span>
+
+<span class="fc" id="L65">        this.backgroundDrawer = new ParallaxBackground();</span>
+<span class="fc" id="L66">        backgroundDrawer.draw(model, pane);</span>
+<span class="fc" id="L67">    }</span>
+
+    public Scene getScene() {
+<span class="fc" id="L70">        return this.scene;</span>
+    }
+
+    public void run() {
+<span class="fc" id="L74">        timeline = new Timeline(new KeyFrame(Duration.millis(17),</span>
+<span class="fc" id="L75">                t -&gt; this.draw()));</span>
+
+<span class="fc" id="L77">        timeline.setCycleCount(Timeline.INDEFINITE);</span>
+<span class="fc" id="L78">        timeline.play();</span>
+<span class="fc" id="L79">    }</span>
+
+    private void setTimer() {
+<span class="fc" id="L82">        time.setText(&quot;Elapsed time: &quot; + model.getTime());</span>
+<span class="fc" id="L83">    }</span>
+
+    private void setLives() {
+<span class="fc" id="L86">        lives.setText(&quot;Lives: &quot; + model.getLives());</span>
+<span class="fc" id="L87">    }</span>
+
+    private void setGameOverText(String s) {
+<span class="nc bnc" id="L90" title="All 2 branches missed.">        for (Node n : pane.getChildren()) {</span>
+<span class="nc" id="L91">            n.setOpacity(0.5);</span>
+<span class="nc" id="L92">        }</span>
+
+<span class="nc" id="L94">        Text gameOverText = new Text(s);</span>
+<span class="nc" id="L95">        gameOverText.setFill(Color.BLACK);</span>
+<span class="nc" id="L96">        gameOverText.setFont(Font.font(20));</span>
+<span class="nc" id="L97">        gameOverText.setViewOrder(0.0);</span>
+<span class="nc" id="L98">        gameOverText.setX(width / 3);</span>
+<span class="nc" id="L99">        gameOverText.setY(scene.getHeight() / 2);</span>
+<span class="nc" id="L100">        pane.getChildren().add(gameOverText);</span>
+<span class="nc" id="L101">        timeline.stop();</span>
+<span class="nc" id="L102">    }</span>
+
+    private void draw() {
+        try {
+<span class="fc" id="L106">            model.tick();</span>
+<span class="nc" id="L107">        } catch (InterruptedException e) {</span>
+<span class="nc" id="L108">            e.printStackTrace();</span>
+<span class="nc" id="L109">            return;</span>
+<span class="fc" id="L110">        }</span>
+
+<span class="fc" id="L112">        setTimer();</span>
+<span class="fc" id="L113">        setLives();</span>
+<span class="pc bpc" id="L114" title="1 of 2 branches missed.">        if (model.getState().equals(&quot;won&quot;)) {</span>
+<span class="nc" id="L115">            setGameOverText(&quot;Congratulations!\n You have won!&quot;);</span>
+<span class="pc bpc" id="L116" title="1 of 2 branches missed.">        } else if (model.getState().equals(&quot;lost&quot;)) {</span>
+<span class="nc" id="L117">            setGameOverText(&quot;Game Over!&quot;);</span>
+        }
+
+<span class="fc" id="L120">        List&lt;Entity&gt; entities = model.getCurrentLevel().getEntities();</span>
+
+<span class="fc bfc" id="L122" title="All 2 branches covered.">        for (EntityView entityView: entityViews) {</span>
+<span class="fc" id="L123">            entityView.markForDelete();</span>
+<span class="fc" id="L124">        }</span>
+
+<span class="fc" id="L126">        double heroXPos = model.getCurrentLevel().getHeroX();</span>
+<span class="fc" id="L127">        heroXPos -= xViewportOffset;</span>
+
+<span class="fc" id="L129">        double heroYPos = model.getCurrentLevel().getHero().getDesiredY();</span>
+<span class="fc" id="L130">        heroYPos += yViewportOffset;</span>
+
+<span class="pc bpc" id="L132" title="1 of 2 branches missed.">        if (heroXPos &lt; VIEWPORT_MARGIN_X) {</span>
+<span class="pc bpc" id="L133" title="1 of 2 branches missed.">            if (xViewportOffset &gt;= 0) { // Don't go further left than the start of the level</span>
+<span class="fc" id="L134">                xViewportOffset -= VIEWPORT_MARGIN_X - heroXPos;</span>
+<span class="pc bpc" id="L135" title="1 of 2 branches missed.">                if (xViewportOffset &lt; 0) {</span>
+<span class="fc" id="L136">                    xViewportOffset = 0;</span>
+                }
+            }
+<span class="nc bnc" id="L139" title="All 2 branches missed.">        } else if (heroXPos &gt; width - VIEWPORT_MARGIN_X) {</span>
+<span class="nc" id="L140">            xViewportOffset += heroXPos - (width - VIEWPORT_MARGIN_X);</span>
+        }
+
+<span class="pc bpc" id="L143" title="1 of 2 branches missed.">        if (heroYPos &gt; VIEWPORT_MARGIN_Y) {</span>
+<span class="pc bpc" id="L144" title="1 of 2 branches missed.">            if (yViewportOffset &gt;= 0) { // Don't go further than bottom of screen</span>
+<span class="fc" id="L145">                yViewportOffset -= heroYPos - VIEWPORT_MARGIN_Y;</span>
+<span class="pc bpc" id="L146" title="1 of 2 branches missed.">                if (yViewportOffset &lt; 0) {</span>
+<span class="fc" id="L147">                    yViewportOffset = 0;</span>
+                }
+            }
+<span class="nc bnc" id="L150" title="All 2 branches missed.">        } else if (heroYPos &lt; height - VIEWPORT_MARGIN_Y) {</span>
+<span class="nc" id="L151">            yViewportOffset += (height - VIEWPORT_MARGIN_Y) - heroYPos;</span>
+        }
+
+<span class="fc" id="L154">        backgroundDrawer.update(xViewportOffset, yViewportOffset);</span>
+
+<span class="fc bfc" id="L156" title="All 2 branches covered.">        for (Entity entity : entities) {</span>
+<span class="fc" id="L157">            boolean notFound = true;</span>
+<span class="fc bfc" id="L158" title="All 2 branches covered.">            for (EntityView view: entityViews) {</span>
+<span class="fc bfc" id="L159" title="All 2 branches covered.">                if (view.matchesEntity(entity)) {</span>
+<span class="fc" id="L160">                    notFound = false;</span>
+<span class="fc" id="L161">                    view.update(xViewportOffset, yViewportOffset);</span>
+<span class="fc" id="L162">                    break;</span>
+                }
+<span class="fc" id="L164">            }</span>
+<span class="fc bfc" id="L165" title="All 2 branches covered.">            if (notFound) {</span>
+<span class="fc" id="L166">                EntityView entityView = new EntityViewImpl(entity);</span>
+<span class="fc" id="L167">                entityViews.add(entityView);</span>
+<span class="fc" id="L168">                pane.getChildren().add(entityView.getNode());</span>
+            }
+<span class="fc" id="L170">        }</span>
+
+<span class="fc bfc" id="L172" title="All 2 branches covered.">        for (EntityView entityView: entityViews) {</span>
+<span class="pc bpc" id="L173" title="1 of 2 branches missed.">            if (entityView.isMarkedForDelete()) {</span>
+<span class="nc" id="L174">                pane.getChildren().remove(entityView.getNode());</span>
+            }
+<span class="fc" id="L176">        }</span>
+<span class="fc" id="L177">        entityViews.removeIf(EntityView::isMarkedForDelete);</span>
+<span class="fc" id="L178">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

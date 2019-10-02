@@ -31,7 +31,9 @@ class KeyboardInputHandler {
     }
 
     void handlePressed(KeyEvent keyEvent) {
+        // if up has already been pressed
         if (pressedKeys.contains(keyEvent.getCode())) {
+            // and is still being pressed, attempt to jump again
             if (keyEvent.getCode().equals(KeyCode.UP)) {
                 if (hc.jump()) {
                     MediaPlayer jumpPlayer = sounds.get("jump");

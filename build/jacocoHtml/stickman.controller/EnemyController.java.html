@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EnemyController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">stickman</a> &gt; <a href="index.source.html" class="el_package">stickman.controller</a> &gt; <span class="el_source">EnemyController.java</span></div><h1>EnemyController.java</h1><pre class="source lang-java linenums">package stickman.controller;
+
+import stickman.model.Enemy;
+import stickman.model.GameEngineImpl;
+import stickman.model.Level;
+import stickman.model.LevelImpl;
+
+import java.util.Random;
+
+public class EnemyController implements Controller {
+    private String standFrame;
+<span class="fc" id="L12">    private int tick = GameEngineImpl.FPS;</span>
+    private LevelImpl level;
+    private Enemy e;
+    private int timeTillChange;
+    private int move;
+
+<span class="fc" id="L18">    public EnemyController(Enemy e) {</span>
+<span class="fc" id="L19">        this.e = e;</span>
+<span class="fc" id="L20">        standFrame = e.getImagePath().substring(6, 7);</span>
+<span class="fc" id="L21">    }</span>
+
+    @Override
+    public boolean jump() {
+<span class="fc" id="L25">        return false;</span>
+    }
+
+    @Override
+    public boolean moveLeft() {
+        // make x velocity negative to move left
+<span class="fc bfc" id="L31" title="All 2 branches covered.">        if (e.getXVel() &gt; 0) {</span>
+<span class="fc" id="L32">            e.setXVel(e.getXVel() * -1);</span>
+        }
+
+<span class="fc" id="L35">        e.setDesiredX(e.getXPos() + (e.getXVel() / GameEngineImpl.FPS));</span>
+<span class="fc" id="L36">        return true;</span>
+    }
+
+    @Override
+    public boolean moveRight() {
+<span class="fc" id="L41">        e.setDesiredX(e.getXPos() + (e.getXVel() / GameEngineImpl.FPS));</span>
+<span class="fc" id="L42">        return true;</span>
+    }
+
+    @Override
+    public boolean stopMoving() {
+<span class="fc" id="L47">        e.setXVel(0);</span>
+<span class="fc" id="L48">        return true;</span>
+    }
+
+    /** Assigns a random integer to variable timeTillChange which decides the number of ticks till
+     * the enemy changes directions. Also sets the x velocity to a random double in range 20 - 70.
+     */
+    private void chooseRandom() {
+<span class="fc" id="L55">        Random rand = new Random();</span>
+<span class="fc" id="L56">        timeTillChange = rand.nextInt(GameEngineImpl.FPS * 2) + 40;</span>
+
+<span class="fc" id="L58">        double xVel = 20 + (rand.nextDouble() * (70 - 20));</span>
+<span class="fc" id="L59">        e.setXVel(xVel);</span>
+<span class="fc" id="L60">    }</span>
+
+    @Override
+    public void tick() {
+<span class="fc" id="L64">        tick--;</span>
+<span class="fc" id="L65">        timeTillChange--;</span>
+
+        // still enemies always stop moving
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (e.getType().equals(&quot;still&quot;)) {</span>
+<span class="fc" id="L69">            stopMoving();</span>
+        } else {
+<span class="fc bfc" id="L71" title="All 2 branches covered.">            if (timeTillChange &lt; 0) {</span>
+<span class="fc" id="L72">                Random rand = new Random();</span>
+                // random int from 0 - 2 to choose direction enemy will move
+<span class="fc" id="L74">                move = rand.nextInt(3);</span>
+<span class="fc" id="L75">                chooseRandom();</span>
+            }
+
+<span class="fc bfc" id="L78" title="All 2 branches covered.">            if (move == 0) {</span>
+<span class="fc" id="L79">                moveLeft();</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">            } else if (move == 1) {</span>
+<span class="fc" id="L81">                moveRight();</span>
+            } else {
+<span class="fc" id="L83">                stopMoving();</span>
+            }
+        }
+
+        // makes sure enemy is not below floor
+<span class="fc bfc" id="L88" title="All 2 branches covered.">        if (level.getFloorHeight() - (e.getDesiredY() + e.getHeight()) &lt; 0.001) {</span>
+<span class="fc" id="L89">            e.setYVel(0);</span>
+<span class="fc" id="L90">            e.setDesiredY(level.getFloorHeight() - e.getHeight());</span>
+        }
+
+        // slow down animation
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        if (tick &gt; GameEngineImpl.FPS * 0.5) {</span>
+<span class="fc" id="L95">            return;</span>
+        }
+<span class="fc" id="L97">        tick = GameEngineImpl.FPS;</span>
+
+<span class="fc bfc" id="L99" title="All 2 branches covered.">        if (standFrame.equals(&quot;a&quot;)) {</span>
+<span class="fc" id="L100">            standFrame = &quot;b&quot;;</span>
+        } else {
+<span class="fc" id="L102">            standFrame = &quot;a&quot;;</span>
+        }
+<span class="fc" id="L104">        String path = e.getImagePath().substring(0, 6) + standFrame + &quot;.png&quot;;</span>
+<span class="fc" id="L105">        e.updateImagePath(path);</span>
+<span class="fc" id="L106">    }</span>
+
+    @Override
+    public void move() {
+<span class="fc" id="L110">        e.setXPos(e.getDesiredX());</span>
+<span class="fc" id="L111">        e.setYPos(e.getDesiredY());</span>
+<span class="fc" id="L112">    }</span>
+
+    @Override
+    public void setLevel(LevelImpl level) {
+<span class="fc" id="L116">        this.level = level;</span>
+<span class="fc" id="L117">    }</span>
+
+    @Override
+    public Level getLevel() {
+<span class="fc" id="L121">        return level;</span>
+    }
+
+    /** Assigns the enemy to be removed from the entity list */
+    public void kill() {
+<span class="fc" id="L126">        level.addEntityToRemove(e);</span>
+<span class="fc" id="L127">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

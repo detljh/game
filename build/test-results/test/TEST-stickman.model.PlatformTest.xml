@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="stickman.model.PlatformTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2019-10-02T11:50:20" hostname="LAPTOP-9KGUS48K" time="0.002">
+  <properties/>
+  <testcase name="getImagePath" classname="stickman.model.PlatformTest" time="0.001"/>
+  <testcase name="getType" classname="stickman.model.PlatformTest" time="0.0"/>
+  <testcase name="getXPos" classname="stickman.model.PlatformTest" time="0.0"/>
+  <testcase name="getYPos" classname="stickman.model.PlatformTest" time="0.0"/>
+  <testcase name="getHeight" classname="stickman.model.PlatformTest" time="0.0"/>
+  <testcase name="getLayer" classname="stickman.model.PlatformTest" time="0.0"/>
+  <testcase name="getWidth" classname="stickman.model.PlatformTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

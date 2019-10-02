@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HeroCollisionStrategy.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">stickman</a> &gt; <a href="index.source.html" class="el_package">stickman.collision</a> &gt; <span class="el_source">HeroCollisionStrategy.java</span></div><h1>HeroCollisionStrategy.java</h1><pre class="source lang-java linenums">package stickman.collision;
+
+import javafx.geometry.Point2D;
+import stickman.controller.EnemyController;
+import stickman.controller.HeroController;
+import stickman.model.Enemy;
+import stickman.model.Entity;
+import stickman.model.Level;
+import stickman.model.MovableEntity;
+import stickman.model.Platform;
+
+public class HeroCollisionStrategy extends CollisionStrategy {
+    private HeroController hc;
+    private Level currentLevel;
+
+<span class="fc" id="L16">    public HeroCollisionStrategy(HeroController hc) {</span>
+<span class="fc" id="L17">        this.hc = hc;</span>
+<span class="fc" id="L18">        currentLevel = hc.getLevel();</span>
+<span class="fc" id="L19">    }</span>
+
+    /**
+     * Checks if the hero collides with another entity.
+     *
+     * @param a An entity that can move
+     * @param other An entity that may collide with @param a
+     * @return True if there is a collision between different entities, false otherwise
+     */
+    @Override
+    public boolean checkCollision(MovableEntity a, Entity other) {
+<span class="fc bfc" id="L30" title="All 2 branches covered.">        if (a.equals(other)) {</span>
+<span class="fc" id="L31">            return false;</span>
+        }
+
+<span class="fc bfc" id="L34" title="All 4 branches covered.">        if (other.getLayer().equals(Entity.Layer.BACKGROUND) || other.getLayer().equals(Entity.Layer.COLLIDER)) {</span>
+<span class="fc" id="L35">            return false;</span>
+        }
+
+        // collision width of hero is half its height
+<span class="fc bfc" id="L39" title="All 2 branches covered.">        return (a.getDesiredX() &lt; (other.getXPos() + other.getWidth())) &amp;&amp;</span>
+<span class="fc bfc" id="L40" title="All 2 branches covered.">                ((a.getDesiredX() + (a.getWidth() / 2)) &gt; other.getXPos()) &amp;&amp;</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">                (a.getDesiredY() &lt; (other.getYPos() + other.getHeight())) &amp;&amp;</span>
+<span class="pc bpc" id="L42" title="1 of 2 branches missed.">                ((a.getDesiredY() + a.getHeight()) &gt; other.getYPos());</span>
+    }
+
+    /**
+     * Performs the movements of the hero with respect to the collision object.
+     *
+     * @param a An entity that can move
+     * @param other An entity that may collide with @param a
+     * @return status of the game, null if no change
+     */
+    @Override
+    public String handleCollision(MovableEntity a, Entity other) {
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        if (other.getLayer().equals(Entity.Layer.FINISH)) {</span>
+<span class="fc" id="L55">            return &quot;won&quot;;</span>
+        }
+
+<span class="fc" id="L58">        Point2D aPos = new Point2D(a.getDesiredX(), a.getDesiredY());</span>
+<span class="fc" id="L59">        Point2D otherPos = new Point2D(other.getXPos(), other.getYPos());</span>
+
+<span class="fc" id="L61">        Point2D collisionVector = otherPos.subtract(aPos);</span>
+<span class="fc" id="L62">        collisionVector = collisionVector.normalize();</span>
+        // width of hero is half its height
+<span class="fc" id="L64">        double width = a.getWidth() / 2;</span>
+
+        // collision on x axis
+<span class="fc bfc" id="L67" title="All 2 branches covered.">        if (Math.abs(collisionVector.getX()) &gt; Math.abs(collisionVector.getY())) {</span>
+            // collision on the left
+<span class="fc bfc" id="L69" title="All 2 branches covered.">            if (collisionVector.getX() &lt; 0) {</span>
+<span class="fc" id="L70">                a.setDesiredX(other.getXPos() + other.getWidth());</span>
+<span class="fc" id="L71">                a.setXVel(0);</span>
+            } else {
+                // collision on the right
+<span class="fc" id="L74">                a.setDesiredX(other.getXPos() - width);</span>
+<span class="fc" id="L75">                a.setXVel(0);</span>
+            }
+
+<span class="fc bfc" id="L78" title="All 2 branches covered.">            if (handleDeath(other)) {</span>
+<span class="fc" id="L79">                return &quot;lost&quot;;</span>
+            }
+        } else {
+            // collision on bottom
+<span class="fc bfc" id="L83" title="All 2 branches covered.">            if (collisionVector.getY() &gt; 0) {</span>
+<span class="fc" id="L84">                a.setDesiredY(other.getYPos() - a.getHeight());</span>
+<span class="fc" id="L85">                a.setYVel(0);</span>
+<span class="fc" id="L86">                hc.setOnFloor(true);</span>
+<span class="fc" id="L87">                hc.setJump(false);</span>
+<span class="fc" id="L88">                handleKill(other);</span>
+<span class="fc" id="L89">                handlePlatformMovement(other);</span>
+            } else {
+                // collision on top
+<span class="fc" id="L92">                a.setDesiredY(other.getYPos() + other.getHeight());</span>
+<span class="fc" id="L93">                a.setYVel(0);</span>
+<span class="fc" id="L94">                hc.setJump(false);</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">                if (handleDeath(other)) {</span>
+<span class="fc" id="L96">                    return &quot;lost&quot;;</span>
+                }
+            }
+        }
+<span class="fc" id="L100">        return null;</span>
+    }
+
+    /**
+     * Checks if the other entity was an enemy. If so, it deducts a life and moves the hero to starting position.
+     *
+     * @param other The other entity the hero collided with
+     * @return true if the hero has no more lives
+     */
+    private boolean handleDeath(Entity other) {
+<span class="fc bfc" id="L110" title="All 2 branches covered.">        if (other instanceof Enemy) {</span>
+<span class="fc" id="L111">            hc.decrementLives();</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">            if (hc.getRemainingLives() == 0) {</span>
+<span class="fc" id="L113">                return true;</span>
+            } else {
+<span class="fc" id="L115">                hc.restartHero();</span>
+            }
+        }
+<span class="fc" id="L118">        return false;</span>
+    }
+
+    /**
+     * Checks if the other entity is an enemy. If so, it removes the enemy.
+     *
+     * @param other The other entity the hero collided with.
+     */
+    private void handleKill(Entity other) {
+<span class="fc bfc" id="L127" title="All 2 branches covered.">        if (other instanceof Enemy) {</span>
+<span class="fc" id="L128">            MovableEntity e = (MovableEntity) other;</span>
+<span class="fc" id="L129">            EnemyController ec = (EnemyController) e.getController();</span>
+<span class="fc" id="L130">            ec.kill();</span>
+        }
+<span class="fc" id="L132">    }</span>
+
+    /**
+     * Checks if the other entity is a platform. If so, it moves the hero according to the type of platform.
+     *
+     * @param other The other entity the hero collided with.
+     */
+    private void handlePlatformMovement(Entity other) {
+<span class="fc bfc" id="L140" title="All 2 branches covered.">        if (other instanceof Platform) {</span>
+<span class="fc" id="L141">            hc.platformMovement(((Platform) other).getType());</span>
+        }
+<span class="fc" id="L143">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

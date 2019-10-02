@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="stickman.model.LevelImplTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2019-10-02T11:50:20" hostname="LAPTOP-9KGUS48K" time="0.09">
+  <properties/>
+  <testcase name="invalidConfig" classname="stickman.model.LevelImplTest" time="0.016"/>
+  <testcase name="getFloorHeight" classname="stickman.model.LevelImplTest" time="0.005"/>
+  <testcase name="getHero" classname="stickman.model.LevelImplTest" time="0.004"/>
+  <testcase name="getEntities" classname="stickman.model.LevelImplTest" time="0.012"/>
+  <testcase name="tick" classname="stickman.model.LevelImplTest" time="0.023"/>
+  <testcase name="getMovableEntities" classname="stickman.model.LevelImplTest" time="0.005"/>
+  <testcase name="getFinish" classname="stickman.model.LevelImplTest" time="0.003"/>
+  <testcase name="getHeight" classname="stickman.model.LevelImplTest" time="0.004"/>
+  <testcase name="getGravity" classname="stickman.model.LevelImplTest" time="0.003"/>
+  <testcase name="getHeroX" classname="stickman.model.LevelImplTest" time="0.002"/>
+  <testcase name="getWidth" classname="stickman.model.LevelImplTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
