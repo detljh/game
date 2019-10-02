@@ -18,7 +18,6 @@ public class HeroController implements Controller {
     private boolean left;
     private boolean jump;
     private String prevMove;
-    private int time = GameEngineImpl.FPS;
 
     public HeroController(Hero hero) {
         this.hero = hero;
@@ -26,8 +25,8 @@ public class HeroController implements Controller {
 
     @Override
     public boolean jump() {
-        double jumpForce = hero.getJumpForce() / time;
-        double yVel = hero.getYVel() / (time / 15);
+        double jumpForce = hero.getJumpForce() / GameEngineImpl.FPS;
+        double yVel = hero.getYVel() / (GameEngineImpl.FPS / 15);
         if (onFloor) {
             // get initial y pos before the jump
             beforeJumpY = hero.getYPos();
@@ -51,19 +50,19 @@ public class HeroController implements Controller {
         prevMove = "left";
         left = true;
 
-        double xVel = hero.getXVel() / time;
+        double xVel = hero.getXVel() / GameEngineImpl.FPS;
         // make x velocity negative to move left
         if (xVel > 0) {
             xVel *= -1;
         }
 
-        double horizontalMovement = hero.getHorizontalMovement() / time;
+        double horizontalMovement = hero.getHorizontalMovement() / GameEngineImpl.FPS;
 
         hero.setXVel(xVel - horizontalMovement);
         hero.setDesiredX(hero.getXPos() + hero.getXVel());
 
         // slow down animation
-        if (tick > (time * 0.9)) {
+        if (tick > (GameEngineImpl.FPS * 0.9)) {
             return true;
         }
         tick = GameEngineImpl.FPS;
@@ -80,18 +79,18 @@ public class HeroController implements Controller {
         prevMove = "right";
         right = true;
 
-        double xVel = hero.getXVel() / time;
+        double xVel = hero.getXVel() / GameEngineImpl.FPS;
         // make x velocity positive to move right
         if (xVel < 0) {
             xVel *= -1;
         }
-        double horizontalMovement = hero.getHorizontalMovement() / time;
+        double horizontalMovement = hero.getHorizontalMovement() / GameEngineImpl.FPS;
 
         hero.setXVel(xVel + horizontalMovement);
         hero.setDesiredX(hero.getXPos() + hero.getXVel());
 
         // slow down animation
-        if (tick > (time * 0.9)) {
+        if (tick > (GameEngineImpl.FPS * 0.9)) {
             return true;
         }
         tick = GameEngineImpl.FPS;

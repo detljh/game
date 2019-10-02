@@ -10,7 +10,6 @@ import java.util.Random;
 public class EnemyController implements Controller {
     private String standFrame;
     private int tick = GameEngineImpl.FPS;
-    private int time = GameEngineImpl.FPS;
     private LevelImpl level;
     private Enemy e;
     private int timeTillChange;
@@ -33,13 +32,13 @@ public class EnemyController implements Controller {
             e.setXVel(e.getXVel() * -1);
         }
 
-        e.setDesiredX(e.getXPos() + (e.getXVel() / time));
+        e.setDesiredX(e.getXPos() + (e.getXVel() / GameEngineImpl.FPS));
         return true;
     }
 
     @Override
     public boolean moveRight() {
-        e.setDesiredX(e.getXPos() + (e.getXVel() / time));
+        e.setDesiredX(e.getXPos() + (e.getXVel() / GameEngineImpl.FPS));
         return true;
     }
 
@@ -54,7 +53,7 @@ public class EnemyController implements Controller {
      */
     private void chooseRandom() {
         Random rand = new Random();
-        timeTillChange = rand.nextInt(time * 2) + 40;
+        timeTillChange = rand.nextInt(GameEngineImpl.FPS * 2) + 40;
 
         double xVel = 20 + (rand.nextDouble() * (70 - 20));
         e.setXVel(xVel);
@@ -92,10 +91,10 @@ public class EnemyController implements Controller {
         }
 
         // slow down animation
-        if (tick > time * 0.5) {
+        if (tick > GameEngineImpl.FPS * 0.5) {
             return;
         }
-        tick = time;
+        tick = GameEngineImpl.FPS;
 
         if (standFrame.equals("a")) {
             standFrame = "b";

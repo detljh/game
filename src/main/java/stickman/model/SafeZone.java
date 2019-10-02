@@ -7,7 +7,7 @@ public class SafeZone implements Entity {
     private double width;
     private String imagePath;
 
-    SafeZone(double xPos, double yPos, double height, double width, String imagePath) {
+    public SafeZone(double xPos, double yPos, double height, double width, String imagePath) {
         this.height = height;
         this.width = width;
         this.xPos = xPos;

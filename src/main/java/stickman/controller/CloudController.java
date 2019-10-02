@@ -6,7 +6,7 @@ import stickman.model.Level;
 import stickman.model.LevelImpl;
 
 public class CloudController implements Controller {
-    Cloud cloud;
+    private Cloud cloud;
     private LevelImpl level;
 
     public CloudController(Cloud cloud) {
