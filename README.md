@@ -42,3 +42,7 @@ See the default `config.json` in `//src/main/resources` for more details.
 
 ## Style Guide
 The style guide used is: https://google.github.io/styleguide/javaguide.html
+
+## Resources
+Collision detection algorithm in `checkCollision()` method in `CollisionStrategy` class: University of Sydney (2019). *Software Design Phase*. [online] Retrieved from
+https://canvas.sydney.edu.au/courses/16757/assignments/133185
